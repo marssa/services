@@ -1,7 +1,7 @@
 /**
  * 
  */
-package mise.demonstrator.navigation_equipment;
+package mise.marssa.services.navigation;
 
 import java.io.IOException;
 import java.util.List;

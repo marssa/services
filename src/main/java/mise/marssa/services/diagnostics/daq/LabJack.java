@@ -1,7 +1,7 @@
 /**
  * 
  */
-package mise.demonstrator.control;
+package mise.marssa.services.diagnostics.daq;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -89,13 +89,13 @@ public class LabJack {
 	
 	/**
 	 * The register containing the timer base clock.
-	 * @see mise.demonstrator.control.LabJack.TimerBaseClock
+	 * @see mise.marssa.services.diagnostics.daq.LabJack.TimerBaseClock
 	 */
 	static public final MInteger TIMER_BASE_CLOCK_ADDR = new MInteger(7000);
 	
 	/**
 	 * The register containing the timer clock divisor.
-	 * @see mise.demonstrator.control.LabJack.TimerBaseClock
+	 * @see mise.marssa.services.diagnostics.daq.LabJack.TimerBaseClock
 	 */
 	static public final MInteger TIMER_CLOCK_DIVISOR_ADDR = new MInteger(7002);
 	
@@ -119,7 +119,7 @@ public class LabJack {
 	/**
 	 * The LabJack U3 has only two timers.<br />
 	 * @see http://labjack.com/support/u3/users-guide/2.9.1
-	 * @see mise.demonstrator.control.LabJack.TimersEnabled
+	 * @see mise.marssa.services.diagnostics.daq.LabJack.TimersEnabled
 	 */
 	public enum Timers {
 		TIMER_0(0),								// Documented in section 2.9.1.1
@@ -209,7 +209,7 @@ public class LabJack {
 	 * <b>Note: Both timers use the same timer clock!</b><br />
 	 * Section 2.9.1.1 of the LabJack documentation has a good description of these modes
 	 * @see http://labjack.com/support/u3/users-guide/2.9
-	 * @see mise.demonstrator.control.LabJack.TIMER_CLOCK_ADDR
+	 * @see mise.marssa.control.LabJack.TIMER_CLOCK_ADDR
 	 */
 	public enum TimerBaseClock {
 		CLOCK_4_MHZ(0),
@@ -363,7 +363,7 @@ public class LabJack {
      * @param timerConfigMode the mode for the specified timer
      * @throws ConfigurationError
      * @throws NoConnection 
-     * @see mise.demonstrator.control.LabJack.TimersEnabled
+     * @see mise.marssa.services.diagnostics.daq.LabJack.TimersEnabled
      */
     public void setTimerMode(Timers timer, TimerConfigMode timerConfigMode) throws ConfigurationError, NoConnection {
     	if((timer.ordinal() + 1) > numTimers.ordinal())
@@ -376,8 +376,8 @@ public class LabJack {
      * Sets the base clock for the LabJack timers 
      * @param timerBaseClock the base clock for the LabJack timers
      * @throws NoConnection 
-     * @see mise.demonstrator.control.LabJack.TimerBaseClock
-     * @see mise.demonstrator.control.LabJack.TIMER_BASE_CLOCK_ADDR
+     * @see mise.marssa.services.diagnostics.daq.LabJack.TimerBaseClock
+     * @see mise.marssa.control.LabJack.TIMER_BASE_CLOCK_ADDR
      */
     public void setTimerBaseClock(TimerBaseClock timerBaseClock) throws NoConnection {
     	this.timerBaseClock = timerBaseClock;
@@ -393,7 +393,7 @@ public class LabJack {
      * @param timerValue the value for the given timer
      * @throws ConfigurationError
      * @throws OutOfRange 
-     * @see mise.demonstrator.control.LabJack.TimersEnabled
+     * @see mise.marssa.services.diagnostics.daq.LabJack.TimersEnabled
      */
     public void setTimerValue(Timers timer, MLong timerValue) throws NoConnection, OutOfRange, ConfigurationError {
     	if((timer.ordinal() + 1) > numTimers.ordinal())
@@ -411,8 +411,8 @@ public class LabJack {
      * @throws OutOfRange
      * @throws ConfigurationError 
      * @throws NoConnection 
-     * @see mise.demonstrator.control.LabJack.TimerBaseClock
-     * @see mise.demonstrator.control.LabJack.TIMER_CLOCK_DIVISOR_ADDR
+     * @see mise.marssa.services.diagnostics.daq.LabJack.TimerBaseClock
+     * @see mise.marssa.control.LabJack.TIMER_CLOCK_DIVISOR_ADDR
      */
     public void setTimerClockDivisor(MLong timerClockDivisor) throws OutOfRange, NoConnection{
     	if(timerClockDivisor.getValue() < 1 || timerClockDivisor.getValue() > 256)

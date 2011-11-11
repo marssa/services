@@ -1,7 +1,7 @@
 /**
  * 
  */
-package mise.demonstrator.control;
+package mise.marssa.services.control;
 
 import mise.marssa.interfaces.control.IController;
 import mise.marssa.interfaces.control.IRamping;
