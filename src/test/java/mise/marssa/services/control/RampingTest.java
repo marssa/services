@@ -12,12 +12,12 @@ import org.restlet.routing.Router;
 import mise.demonstrator.constants.Constants;
 import mise.demonstrator.control.Ramping;
 import mise.demonstrator.control.Ramping.RampingType;
-import mise.marssa.data_types.float_datatypes.MFloat;
-import mise.marssa.data_types.integer_datatypes.MInteger;
-import mise.marssa.exceptions.ConfigurationError;
-import mise.marssa.exceptions.NoConnection;
-import mise.marssa.exceptions.OutOfRange;
-import mise.marssa.interfaces.control.IController;
+import mise.marssa.footprint.data_types.float_datatypes.MFloat;
+import mise.marssa.footprint.data_types.integer_datatypes.MInteger;
+import mise.marssa.footprint.exceptions.ConfigurationError;
+import mise.marssa.footprint.exceptions.NoConnection;
+import mise.marssa.footprint.exceptions.OutOfRange;
+import mise.marssa.footprint.interfaces.control.IController;
 
 public class RampingTest {
 

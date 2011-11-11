@@ -22,14 +22,14 @@ import net.wimpi.modbus.msg.WriteSingleRegisterRequest;
 import net.wimpi.modbus.net.TCPMasterConnection;
 import net.wimpi.modbus.procimg.SimpleRegister;
 
-import mise.marssa.data_types.MBoolean;
-import mise.marssa.data_types.MString;
-import mise.marssa.data_types.float_datatypes.MFloat;
-import mise.marssa.data_types.integer_datatypes.MInteger;
-import mise.marssa.data_types.integer_datatypes.MLong;
-import mise.marssa.exceptions.ConfigurationError;
-import mise.marssa.exceptions.NoConnection;
-import mise.marssa.exceptions.OutOfRange;
+import mise.marssa.footprint.data_types.MBoolean;
+import mise.marssa.footprint.data_types.MString;
+import mise.marssa.footprint.data_types.float_datatypes.MFloat;
+import mise.marssa.footprint.data_types.integer_datatypes.MInteger;
+import mise.marssa.footprint.data_types.integer_datatypes.MLong;
+import mise.marssa.footprint.exceptions.ConfigurationError;
+import mise.marssa.footprint.exceptions.NoConnection;
+import mise.marssa.footprint.exceptions.OutOfRange;
 
 /**
  * @author Warren Zahra
@@ -257,17 +257,14 @@ public class LabJack {
 		//static private Set<LabJackConnection> activeConnections;
 		static private ArrayList<LabJackConnection> activeConnections = new ArrayList<LabJack.LabJackConnection>();
 
-		@Override
 		public boolean hasNext() {
 			return activeConnections.iterator().hasNext();
 		}
 
-		@Override
 		public LabJackConnection next() {
 			return activeConnections.iterator().next();
 		}
 
-		@Override
 		public void remove() {
 			activeConnections.iterator().remove();
 		}

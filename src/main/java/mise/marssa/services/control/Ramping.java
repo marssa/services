@@ -3,13 +3,13 @@
  */
 package mise.marssa.services.control;
 
-import mise.marssa.interfaces.control.IController;
-import mise.marssa.interfaces.control.IRamping;
-import mise.marssa.data_types.integer_datatypes.MInteger;
-import mise.marssa.data_types.float_datatypes.MFloat;
-import mise.marssa.exceptions.ConfigurationError;
-import mise.marssa.exceptions.NoConnection;
-import mise.marssa.exceptions.OutOfRange;
+import mise.marssa.footprint.interfaces.control.IController;
+import mise.marssa.footprint.interfaces.control.IRamping;
+import mise.marssa.footprint.data_types.integer_datatypes.MInteger;
+import mise.marssa.footprint.data_types.float_datatypes.MFloat;
+import mise.marssa.footprint.exceptions.ConfigurationError;
+import mise.marssa.footprint.exceptions.NoConnection;
+import mise.marssa.footprint.exceptions.OutOfRange;
 
 /**
  * @author Clayton Tabone
@@ -34,7 +34,6 @@ public class Ramping implements IRamping {
 		}
 
 		// TODO These exceptions have to be properly handled
-		@Override
 		public void run() {
 			try {
 				float difference = desiredValue.getValue() - currentValue;
@@ -133,7 +132,6 @@ public class Ramping implements IRamping {
 	/* (non-Javadoc)
 	 * @see mise.marssa.interfaces.electrical_motor_control.IRamping#rampTo(mise.marssa.data_types.float_datatypes.MFloat)
 	 */
-	@Override
 	public void rampTo(MFloat desiredValue) throws InterruptedException {
 		// Check if the ramping task exists
 		if(this.rampingTask != null) {
@@ -155,7 +153,6 @@ public class Ramping implements IRamping {
 	/* (non-Javadoc)
 	 * @see mise.marssa.interfaces.electrical_motor_control.IRamping#increase(mise.marssa.data_types.float_datatypes.MFloat)
 	 */
-	@Override
 	public void increase(MFloat incrementValue) throws InterruptedException, ConfigurationError, OutOfRange, NoConnection {
 		rampTo(new MFloat(currentValue + incrementValue.getValue()));
 	}
@@ -163,12 +160,10 @@ public class Ramping implements IRamping {
 	/* (non-Javadoc)
 	 * @see mise.marssa.interfaces.electrical_motor_control.IRamping#decrease(mise.marssa.data_types.float_datatypes.MFloat)
 	 */
-	@Override
 	public void decrease(MFloat decrementValue) throws InterruptedException, ConfigurationError, OutOfRange, NoConnection {
 		rampTo(new MFloat(currentValue - decrementValue.getValue()));
 	}
 
-	@Override
 	public MFloat getCurrentValue() {
 		return new MFloat(currentValue);
 	}

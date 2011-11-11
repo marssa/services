@@ -9,22 +9,22 @@ import java.util.List;
 import de.taimos.gpsd4java.backend.GPSdEndpoint;
 import de.taimos.gpsd4java.types.ParseException;
 import de.taimos.gpsd4java.types.TPVObject;
-import mise.demonstrator.constants.Constants;
-import mise.marssa.data_types.MDate;
-import mise.marssa.data_types.MString;
-import mise.marssa.data_types.time.Hours;
-import mise.marssa.data_types.composite_datatypes.Coordinate;
-import mise.marssa.data_types.composite_datatypes.Latitude;
-import mise.marssa.data_types.composite_datatypes.Longitude;
-import mise.marssa.data_types.float_datatypes.DegreesFloat;
-import mise.marssa.data_types.float_datatypes.MFloat;
-import mise.marssa.data_types.float_datatypes.speed.Knots;
-import mise.marssa.data_types.integer_datatypes.DegreesInteger;
-import mise.marssa.data_types.integer_datatypes.MInteger;
-import mise.marssa.exceptions.NoConnection;
-import mise.marssa.exceptions.NoValue;
-import mise.marssa.exceptions.OutOfRange;
-import mise.marssa.interfaces.navigation_equipment.IGpsReceiver;
+import mise.marssa.services.constants.Constants;
+import mise.marssa.footprint.data_types.MDate;
+import mise.marssa.footprint.data_types.MString;
+import mise.marssa.footprint.data_types.time.Hours;
+import mise.marssa.footprint.data_types.composite_datatypes.Coordinate;
+import mise.marssa.footprint.data_types.composite_datatypes.Latitude;
+import mise.marssa.footprint.data_types.composite_datatypes.Longitude;
+import mise.marssa.footprint.data_types.float_datatypes.DegreesFloat;
+import mise.marssa.footprint.data_types.float_datatypes.MFloat;
+import mise.marssa.footprint.data_types.float_datatypes.speed.Knots;
+import mise.marssa.footprint.data_types.integer_datatypes.DegreesInteger;
+import mise.marssa.footprint.data_types.integer_datatypes.MInteger;
+import mise.marssa.footprint.exceptions.NoConnection;
+import mise.marssa.footprint.exceptions.NoValue;
+import mise.marssa.footprint.exceptions.OutOfRange;
+import mise.marssa.footprint.interfaces.navigation_equipment.IGpsReceiver;
 
 /**
  * @author Clayton Tabone
@@ -52,7 +52,6 @@ public class GpsReceiver implements IGpsReceiver {
 	/* (non-Javadoc)
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getAzimuth()
 	 */
-	@Override
 	public DegreesInteger getAzimuth() {
 		// TODO Auto-generated method stub
 		return null;
@@ -61,7 +60,6 @@ public class GpsReceiver implements IGpsReceiver {
 	/* (non-Javadoc)
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getCOG()
 	 */
-	@Override
 	public DegreesFloat getCOG() throws NoConnection, NoValue {
 		for(int i = 0; i < Constants.GENERAL.RETRY_AMOUNT.getValue(); i++) {
 			try {
@@ -85,7 +83,6 @@ public class GpsReceiver implements IGpsReceiver {
 	/* (non-Javadoc)
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getCoordinate()
 	 */
-	@Override
 	public Coordinate getCoordinate() throws NoConnection, NoValue, OutOfRange {
 		//for(int i = 0; i < Constants.GENERAL.RETRY_AMOUNT.getValue(); i++) {
 			try {
@@ -114,7 +111,6 @@ public class GpsReceiver implements IGpsReceiver {
 	/* (non-Javadoc)
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getDate()
 	 */
-	@Override
 	public MDate getDate() throws NoConnection, NoValue {
 		for(int i = 0; i < Constants.GENERAL.RETRY_AMOUNT.getValue(); i++) {
 			try {
@@ -139,7 +135,6 @@ public class GpsReceiver implements IGpsReceiver {
 	/* (non-Javadoc)
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getElevation()
 	 */
-	@Override
 	public DegreesFloat getElevation() throws NoConnection, NoValue {
 		for(int i = 0; i < Constants.GENERAL.RETRY_AMOUNT.getValue(); i++) {
 			try {
@@ -162,7 +157,6 @@ public class GpsReceiver implements IGpsReceiver {
 	/* (non-Javadoc)
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getHDOP()
 	 */
-	@Override
 	public MFloat getHDOP() {
 		// TODO Auto-generated method stub
 		return null;
@@ -171,7 +165,6 @@ public class GpsReceiver implements IGpsReceiver {
 	/* (non-Javadoc)
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getLocalZoneTime()
 	 */
-	@Override
 	public Hours getLocalZoneTime() {
 		// TODO Auto-generated method stub
 		return null;
@@ -180,7 +173,6 @@ public class GpsReceiver implements IGpsReceiver {
 	/* (non-Javadoc)
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getPDOP()
 	 */
-	@Override
 	public MFloat getPDOP() {
 		// TODO Auto-generated method stub
 		return null;
@@ -189,7 +181,6 @@ public class GpsReceiver implements IGpsReceiver {
 	/* (non-Javadoc)
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getSatelliteID()
 	 */
-	@Override
 	public MInteger getSatelliteID() {
 		// TODO Auto-generated method stub
 		return null;
@@ -198,7 +189,6 @@ public class GpsReceiver implements IGpsReceiver {
 	/* (non-Javadoc)
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getSatelliteInView()
 	 */
-	@Override
 	public MInteger getSatelliteInView() {
 		// TODO Auto-generated method stub
 		return null;
@@ -207,7 +197,6 @@ public class GpsReceiver implements IGpsReceiver {
 	/* (non-Javadoc)
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getSatellitesInUse()
 	 */
-	@Override
 	public MInteger getSatellitesInUse() {
 		// TODO Auto-generated method stub
 		return null;
@@ -216,7 +205,6 @@ public class GpsReceiver implements IGpsReceiver {
 	/* (non-Javadoc)
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getSignalSrength()
 	 */
-	@Override
 	public MFloat getSignalSrength() {
 		// TODO Auto-generated method stub
 		return null;
@@ -225,7 +213,6 @@ public class GpsReceiver implements IGpsReceiver {
 	/* (non-Javadoc)
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getSNR()
 	 */
-	@Override
 	public MFloat getSNR() {
 		// TODO Auto-generated method stub
 		return null;
@@ -234,7 +221,6 @@ public class GpsReceiver implements IGpsReceiver {
 	/* (non-Javadoc)
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getSOG()
 	 */
-	@Override
 	public Knots getSOG() throws NoConnection, NoValue {
 		for (int i = 0; i < Constants.GENERAL.RETRY_AMOUNT.getValue(); i++) {
 			try {
@@ -263,7 +249,6 @@ public class GpsReceiver implements IGpsReceiver {
 	/* (non-Javadoc)
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getStatus()
 	 */
-	@Override
 	public MString getStatus() {
 		// TODO Auto-generated method stub
 		return null;
@@ -272,7 +257,6 @@ public class GpsReceiver implements IGpsReceiver {
 	/* (non-Javadoc)
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getTime()
 	 */
-	@Override
 	public Hours getTime() {
 		// TODO Auto-generated method stub
 		return null;
@@ -281,13 +265,11 @@ public class GpsReceiver implements IGpsReceiver {
 	/* (non-Javadoc)
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getVDOP()
 	 */
-	@Override
 	public MFloat getVDOP() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public MFloat getEPT() throws NoConnection, NoValue, OutOfRange {
 		for(int i = 0; i < Constants.GENERAL.RETRY_AMOUNT.getValue(); i++) {
 			try {
