@@ -9,7 +9,7 @@ import mise.marssa.footprint.data_types.integer_datatypes.MInteger;
  * @author Clayton Tabone
  *
  */
-public class Constants {
+public class ServicesConstants {
 	/**
 	 * General Constants
 	 * @author Clayton Tabone
