@@ -23,6 +23,7 @@
 	<scm>
 		<url>git@github.com:marssa/services.git</url>
 		<connection>ssh</connection>
+		<developerConnection>Clayton Tabone, Warren Zahra, Amanda Fenech, Alan Grech</developerConnection>
 	</scm>
 
 	<issueManagement>
@@ -54,6 +55,11 @@
 			<artifactId>libraries</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>net.sf</groupId>
+			<artifactId>marineapi</artifactId>
+			<version>0.4.132-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -74,7 +80,7 @@
 				<artifactId>maven-deploy-plugin</artifactId>
 				<version>2.5</version>
 				<configuration>
-					<altDeploymentRepository>services::default::file:../marssa-mvn-repo/snapshots</altDeploymentRepository>
+					<altDeploymentRepository>footprint::default::file:../../git/marssa-mvn-repo/snapshots</altDeploymentRepository>
 				</configuration>
 			</plugin>
 		</plugins>
