@@ -30,19 +30,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
 
-
-import net.sf.marineapi.nmea.event.SentenceEvent;
-import net.sf.marineapi.nmea.event.SentenceListener;
-import net.sf.marineapi.nmea.io.SentenceReader;
-import net.sf.marineapi.nmea.parser.MTWParser;
-import net.sf.marineapi.nmea.parser.SentenceFactory;
-import net.sf.marineapi.nmea.parser.SentenceParser;
-import net.sf.marineapi.nmea.parser.VHWParser;
-import net.sf.marineapi.nmea.sentence.DBTSentence;
-import net.sf.marineapi.nmea.sentence.MTWSentence;
-import net.sf.marineapi.nmea.sentence.Sentence;
-import net.sf.marineapi.nmea.sentence.SentenceId;
-import net.sf.marineapi.nmea.sentence.SentenceValidator;
+import mise.marssa.footprint.interfaces.navigation_equipment.IDepthSensor;
+import mise.marssa.footprint.interfaces.navigation_equipment.ISensors;
+import mise.marssa.footprint.interfaces.navigation_equipment.ISpeedSensor;
+import mise.marssa.services.navigation.DepthSensor;
+import mise.marssa.services.navigation.SpeedSensor;
 
 // If using Java Communications API, remove gnu.io imports above and
 // use corresponding javax.comm classes:
