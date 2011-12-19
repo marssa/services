@@ -9,7 +9,7 @@ import java.util.List;
 import de.taimos.gpsd4java.backend.GPSdEndpoint;
 import de.taimos.gpsd4java.types.ParseException;
 import de.taimos.gpsd4java.types.TPVObject;
-import mise.marssa.services.constants.Constants;
+import mise.marssa.services.constants.ServicesConstants;
 import mise.marssa.footprint.data_types.MDate;
 import mise.marssa.footprint.data_types.MString;
 import mise.marssa.footprint.data_types.time.Hours;
@@ -61,16 +61,16 @@ public class GpsReceiver implements IGpsReceiver {
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getCOG()
 	 */
 	public DegreesFloat getCOG() throws NoConnection, NoValue {
-		for(int i = 0; i < Constants.GENERAL.RETRY_AMOUNT.getValue(); i++) {
+		for(int i = 0; i < ServicesConstants.GENERAL.RETRY_AMOUNT.getValue(); i++) {
 			try {
 				float cog = (float) ep.poll().getFixes().get(0).getCourse();
 				return new DegreesFloat(cog);
 			} catch(IOException e) {
-				if(i > Constants.GENERAL.RETRY_AMOUNT.getValue()) {
+				if(i > ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
 					throw new NoConnection(e.getMessage(), e.getCause());
 				}
 			} catch(ParseException e) {
-				if(i > Constants.GENERAL.RETRY_AMOUNT.getValue()) {
+				if(i > ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
 					throw new NoValue("The COG is not available from the GPSReceiver. This is the error message from the gpsd4java library:" + e.getMessage(), e.getCause());
 				}
 			}
@@ -112,17 +112,17 @@ public class GpsReceiver implements IGpsReceiver {
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getDate()
 	 */
 	public MDate getDate() throws NoConnection, NoValue {
-		for(int i = 0; i < Constants.GENERAL.RETRY_AMOUNT.getValue(); i++) {
+		for(int i = 0; i < ServicesConstants.GENERAL.RETRY_AMOUNT.getValue(); i++) {
 			try {
 				double timestamp = ep.poll().getFixes().get(0).getTimestamp();
 				System.out.println(timestamp);
 				return new MDate((long) timestamp);
 			} catch(IOException e) {
-				if(i > Constants.GENERAL.RETRY_AMOUNT.getValue()) {
+				if(i > ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
 					throw new NoConnection(e.getMessage(), e.getCause());
 				}
 			} catch(ParseException e) {
-				if(i > Constants.GENERAL.RETRY_AMOUNT.getValue()) {
+				if(i > ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
 					throw new NoValue("The COG is not available from the GPSReceiver. This is the error message from the gpsd4java library:" + e.getMessage(), e.getCause());
 				}
 			}
@@ -136,17 +136,17 @@ public class GpsReceiver implements IGpsReceiver {
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getElevation()
 	 */
 	public DegreesFloat getElevation() throws NoConnection, NoValue {
-		for(int i = 0; i < Constants.GENERAL.RETRY_AMOUNT.getValue(); i++) {
+		for(int i = 0; i < ServicesConstants.GENERAL.RETRY_AMOUNT.getValue(); i++) {
 			try {
 				double altitude = ep.poll().getFixes().get(0).getAltitude();
 				//System.out.println("This altitude is " + altitude);
 				return new DegreesFloat((float) altitude);
 			} catch(IOException e) {
-				if(i > Constants.GENERAL.RETRY_AMOUNT.getValue()) {
+				if(i > ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
 					throw new NoConnection(e.getMessage(), e.getCause());
 			}
 			}catch(ParseException e) {
-				if(i > Constants.GENERAL.RETRY_AMOUNT.getValue()) {
+				if(i > ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
 					throw new NoValue("The Altitude is not available from the GPSReceiver." + e.getMessage(), e.getCause());
 				}
 			}
@@ -222,18 +222,18 @@ public class GpsReceiver implements IGpsReceiver {
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getSOG()
 	 */
 	public Knots getSOG() throws NoConnection, NoValue {
-		for (int i = 0; i < Constants.GENERAL.RETRY_AMOUNT.getValue(); i++) {
+		for (int i = 0; i < ServicesConstants.GENERAL.RETRY_AMOUNT.getValue(); i++) {
 			try {
 				double speed = ep.poll().getFixes().get(0).getSpeed();
 				//System.out.println("This altitude is " + altitude);
 				return new Knots((float) speed);
 				
 			} catch(IOException e) {
-				if(i > Constants.GENERAL.RETRY_AMOUNT.getValue()) {
+				if(i > ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
 					throw new NoConnection(e.getMessage(), e.getCause());
 			}
 			}catch(ParseException e) {
-				if(i > Constants.GENERAL.RETRY_AMOUNT.getValue()) {
+				if(i > ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
 					throw new NoValue("The Altitude is not available from the GPSReceiver." + e.getMessage(), e.getCause());
 				}
 			} catch (OutOfRange e) {
@@ -271,7 +271,7 @@ public class GpsReceiver implements IGpsReceiver {
 	}
 
 	public MFloat getEPT() throws NoConnection, NoValue, OutOfRange {
-		for(int i = 0; i < Constants.GENERAL.RETRY_AMOUNT.getValue(); i++) {
+		for(int i = 0; i < ServicesConstants.GENERAL.RETRY_AMOUNT.getValue(); i++) {
 			try {
 				// Suppose to be EPT, description of an EPT is http://www.devhardware.com/c/a/Mobile-Devices/TomTom-GO-920T-GPS-Review/2/
 				double EPT = ep.poll().getFixes().get(0).getCourse();
@@ -279,11 +279,11 @@ public class GpsReceiver implements IGpsReceiver {
 				return new Knots((float) EPT);
 				
 			} catch(IOException e) {
-				if(i > Constants.GENERAL.RETRY_AMOUNT.getValue()) {
+				if(i > ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
 					throw new NoConnection(e.getMessage(), e.getCause());
 				}
 			} catch(ParseException e) {
-				if(i > Constants.GENERAL.RETRY_AMOUNT.getValue()) {
+				if(i > ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
 					throw new NoValue("The Altitude is not available from the GPSReceiver." + e.getMessage(), e.getCause());
 				}
 			}

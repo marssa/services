@@ -9,9 +9,9 @@ import org.restlet.data.MediaType;
 import org.restlet.data.Protocol;
 import org.restlet.data.Status;
 import org.restlet.routing.Router;
-import mise.demonstrator.constants.Constants;
-import mise.demonstrator.control.Ramping;
-import mise.demonstrator.control.Ramping.RampingType;
+import mise.marssa.services.constants.ServicesTestConstants;
+import mise.marssa.services.control.Ramping;
+import mise.marssa.services.control.Ramping.RampingType;
 import mise.marssa.footprint.data_types.float_datatypes.MFloat;
 import mise.marssa.footprint.data_types.integer_datatypes.MInteger;
 import mise.marssa.footprint.exceptions.ConfigurationError;
@@ -43,21 +43,18 @@ public class RampingTest {
 			ramping.rampTo(desiredValue);
 		}
 
-		@Override
 		public void outputValue(MFloat value) throws ConfigurationError,
 				OutOfRange, NoConnection {
 			// TODO Auto-generated method stub
 			System.out.println(value);
 		}
 
-		@Override
 		public void setPolaritySignal(Polarity polarity)
 				throws NoConnection {
 			// TODO Auto-generated method stub
 
 		}
 
-		@Override
 		public MFloat getValue() {
 			// TODO Auto-generated method stub
 			return null;
@@ -111,7 +108,7 @@ public class RampingTest {
 		Component component = new Component();
 
 	    // Add a new HTTP server listening on the given port
-	    component.getServers().add(Protocol.HTTP, Constants.WEB_SERVICES.HOST.getContents(), Constants.WEB_SERVICES.PORT.getValue());
+	    component.getServers().add(Protocol.HTTP, ServicesTestConstants.WEB_SERVICES.HOST.getContents(), ServicesTestConstants.WEB_SERVICES.PORT.getValue());
 
 		// Attach the motion control feedback application
 	    component.getDefaultHost().attach("/testing", new RampingTestApplication());
