@@ -1,7 +1,7 @@
 package mise.marssa.services.nmea;
 
 /* 
- * SerialPortExample.java
+ * NMEAReader.java
  * Copyright (C) 2011 Kimmo Tuukkanen
  * 
  * This file is part of Java Marine API.
@@ -29,6 +29,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
+
+import net.sf.marineapi.nmea.event.SentenceEvent;
+import net.sf.marineapi.nmea.event.SentenceListener;
+import net.sf.marineapi.nmea.io.SentenceReader;
+import net.sf.marineapi.nmea.parser.SentenceFactory;
+import net.sf.marineapi.nmea.sentence.Sentence;
+import net.sf.marineapi.nmea.sentence.SentenceValidator;
 
 import mise.marssa.footprint.interfaces.navigation_equipment.IDepthSensor;
 import mise.marssa.footprint.interfaces.navigation_equipment.ISensors;
@@ -75,28 +82,18 @@ public class NMEAReader implements SentenceListener, ISensors {
                  sr = new SentenceReader(is);
                  sr.addSentenceListener(this);
                  sr.start();
-                 initializeNewSentenceIDs();
              }
 
          } catch (IOException e) {
              e.printStackTrace();
          }
     }
-
-	
-	public void initializeNewSentenceIDs() {
-
-		SF.registerParser("MTW", MTWParser.class);
-		SF.registerParser("VHW", VHWParser.class);
-	}
-
 	
 	public IDepthSensor getDepthSensor() {
     	return depthSensor;
     }
     
-    @Override
-	public ISpeedSensor getSpeedSensor() {
+    public ISpeedSensor getSpeedSensor() {
 		
 		return speedSensor;
 	}

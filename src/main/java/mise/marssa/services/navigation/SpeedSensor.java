@@ -3,6 +3,14 @@
  */
 package mise.marssa.services.navigation;
 
+import net.sf.marineapi.nmea.event.SentenceEvent;
+import net.sf.marineapi.nmea.event.SentenceListener;
+import net.sf.marineapi.nmea.io.SentenceReader;
+import net.sf.marineapi.nmea.sentence.DBTSentence;
+import net.sf.marineapi.nmea.sentence.DPTSentence;
+import net.sf.marineapi.nmea.sentence.MTWSentence;
+import net.sf.marineapi.nmea.sentence.SentenceId;
+import net.sf.marineapi.nmea.sentence.VHWSentence;
 import mise.marssa.footprint.data_types.float_datatypes.DegreesFloat;
 import mise.marssa.footprint.data_types.float_datatypes.distance.ADistance;
 import mise.marssa.footprint.data_types.float_datatypes.distance.Metres;
