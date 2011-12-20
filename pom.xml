@@ -63,11 +63,6 @@
 			<artifactId>libraries</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>net.sf</groupId>
-			<artifactId>marineapi</artifactId>
-			<version>0.4.134-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 
 	<build>
