@@ -3,7 +3,6 @@
  */
 package mise.marssa.services.navigation;
 
-
 import net.sf.marineapi.nmea.event.SentenceEvent;
 import net.sf.marineapi.nmea.event.SentenceListener;
 import net.sf.marineapi.nmea.io.SentenceReader;
@@ -20,54 +19,57 @@ import mise.marssa.footprint.interfaces.navigation_equipment.IDepthSensor;
 
 /**
  * @author Warren Zahra
- *
+ * 
  */
 public class DepthSensor implements IDepthSensor, SentenceListener {
 	SentenceReader reader;
-	
+
 	Metres depthMetres = null;
 	DegreesCelcius temperatureDegrees = null;
-	
-	public DepthSensor(SentenceReader reader){
+
+	public DepthSensor(SentenceReader reader) {
 		this.reader = reader;
-        reader.addSentenceListener(this, "MTW");
-        reader.addSentenceListener(this, SentenceId.DBT);
-        reader.addSentenceListener(this, SentenceId.DPT);
+		reader.addSentenceListener(this, "MTW");
+		reader.addSentenceListener(this, SentenceId.DBT);
+		reader.addSentenceListener(this, SentenceId.DPT);
 	}
-	
-	public ADistance getDepthMetres() throws OutOfRange{
+
+	public ADistance getDepthMetres() throws OutOfRange {
 		return depthMetres;
 	}
-	
-	public ATemperature getTemperatureDegrees(){
+
+	public ATemperature getTemperatureDegrees() {
 		return temperatureDegrees;
 	}
-	
-	public void readingPaused() {}
-	
-	public void readingStarted() {}
-	
-	public void readingStopped() {}
-	
-	
+
+	public void readingPaused() {
+	}
+
+	public void readingStarted() {
+	}
+
+	public void readingStopped() {
+	}
+
 	public void sentenceRead(SentenceEvent event) {
-		
+
 		String sid = event.getSentence().getSentenceId().toString();
 		System.out.println("Received sentence with sid = " + sid);
 		try {
-	        if (sid.equals("MTW")) {
-	        	MTWSentence mtw = (MTWSentence) event.getSentence();
-	        	temperatureDegrees = new DegreesCelcius((float) mtw.getTemperature());
-	        	
-	        } else if(sid.equals("DBT")) {
-	        	DBTSentence dbt = (DBTSentence) event.getSentence();
+			if (sid.equals("MTW")) {
+				MTWSentence mtw = (MTWSentence) event.getSentence();
+				temperatureDegrees = new DegreesCelcius(
+						(float) mtw.getTemperature());
+
+			} else if (sid.equals("DBT")) {
+				DBTSentence dbt = (DBTSentence) event.getSentence();
 				depthMetres = new Metres((float) dbt.getDepth());
-	        	
-	        } else if(sid.equals("DPT")) {
-	        	DPTSentence dpt = (DPTSentence) event.getSentence();
-	        	depthMetres = new Metres((float) dpt.getDepth());
-	        	
-	        }
+
+			} else if (sid.equals("DPT")) {
+				DPTSentence dpt = (DPTSentence) event.getSentence();
+				depthMetres = new Metres((float) dpt.getDepth());
+
+			}
 		} catch (OutOfRange e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
