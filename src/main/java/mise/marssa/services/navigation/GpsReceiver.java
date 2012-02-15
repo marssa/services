@@ -6,6 +6,10 @@ package mise.marssa.services.navigation;
 import java.io.IOException;
 import java.util.List;
 
+import de.taimos.gpsd4java.backend.GPSdEndpoint;
+import de.taimos.gpsd4java.types.ParseException;
+import de.taimos.gpsd4java.types.TPVObject;
+import mise.marssa.services.constants.ServicesConstants;
 import mise.marssa.footprint.datatypes.MDate;
 import mise.marssa.footprint.datatypes.MString;
 import mise.marssa.footprint.datatypes.composite.Coordinate;

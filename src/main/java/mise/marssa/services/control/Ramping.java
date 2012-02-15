@@ -3,6 +3,8 @@
  */
 package mise.marssa.services.control;
 
+import mise.marssa.footprint.interfaces.control.IController;
+import mise.marssa.footprint.interfaces.control.IRamping;
 import mise.marssa.footprint.datatypes.decimal.MFloat;
 import mise.marssa.footprint.datatypes.integer.MInteger;
 import mise.marssa.footprint.exceptions.ConfigurationError;

@@ -11,15 +11,6 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import mise.marssa.footprint.datatypes.MBoolean;
-import mise.marssa.footprint.datatypes.MString;
-import mise.marssa.footprint.datatypes.decimal.MFloat;
-import mise.marssa.footprint.datatypes.integer.MInteger;
-import mise.marssa.footprint.datatypes.integer.MLong;
-import mise.marssa.footprint.exceptions.ConfigurationError;
-import mise.marssa.footprint.exceptions.NoConnection;
-import mise.marssa.footprint.exceptions.OutOfRange;
-import mise.marssa.footprint.logger.MMarker;
 import net.wimpi.modbus.ModbusException;
 import net.wimpi.modbus.ModbusIOException;
 import net.wimpi.modbus.ModbusSlaveException;
@@ -31,7 +22,14 @@ import net.wimpi.modbus.msg.WriteSingleRegisterRequest;
 import net.wimpi.modbus.net.TCPMasterConnection;
 import net.wimpi.modbus.procimg.SimpleRegister;
 
-import org.slf4j.LoggerFactory;
+import mise.marssa.footprint.datatypes.MBoolean;
+import mise.marssa.footprint.datatypes.MString;
+import mise.marssa.footprint.datatypes.decimal.MFloat;
+import mise.marssa.footprint.datatypes.integer.MInteger;
+import mise.marssa.footprint.datatypes.integer.MLong;
+import mise.marssa.footprint.exceptions.ConfigurationError;
+import mise.marssa.footprint.exceptions.NoConnection;
+import mise.marssa.footprint.exceptions.OutOfRange;
 
 import ch.qos.logback.classic.Logger;
 

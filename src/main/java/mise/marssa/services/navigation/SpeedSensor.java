@@ -21,6 +21,15 @@ import net.sf.marineapi.nmea.sentence.DPTSentence;
 import net.sf.marineapi.nmea.sentence.MTWSentence;
 import net.sf.marineapi.nmea.sentence.SentenceId;
 import net.sf.marineapi.nmea.sentence.VHWSentence;
+import mise.marssa.footprint.datatypes.decimal.DegreesFloat;
+import mise.marssa.footprint.datatypes.decimal.distance.ADistance;
+import mise.marssa.footprint.datatypes.decimal.distance.Metres;
+import mise.marssa.footprint.datatypes.decimal.speed.ASpeed;
+import mise.marssa.footprint.datatypes.decimal.speed.Knots;
+import mise.marssa.footprint.datatypes.decimal.temperature.ATemperature;
+import mise.marssa.footprint.datatypes.decimal.temperature.DegreesCelcius;
+import mise.marssa.footprint.exceptions.OutOfRange;
+import mise.marssa.footprint.interfaces.navigation.ISpeedSensor;
 
 import org.slf4j.LoggerFactory;
 
