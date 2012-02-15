@@ -37,9 +37,9 @@ import net.sf.marineapi.nmea.parser.SentenceFactory;
 import net.sf.marineapi.nmea.sentence.Sentence;
 import net.sf.marineapi.nmea.sentence.SentenceValidator;
 
-import mise.marssa.footprint.interfaces.navigation_equipment.IDepthSensor;
-import mise.marssa.footprint.interfaces.navigation_equipment.ISensors;
-import mise.marssa.footprint.interfaces.navigation_equipment.ISpeedSensor;
+import mise.marssa.footprint.interfaces.navigation.IDepthSensor;
+import mise.marssa.footprint.interfaces.navigation.ISensors;
+import mise.marssa.footprint.interfaces.navigation.ISpeedSensor;
 import mise.marssa.services.navigation.DepthSensor;
 import mise.marssa.services.navigation.SpeedSensor;
 
@@ -161,7 +161,7 @@ public class NMEAReader implements SentenceListener, ISensors {
      */
     private SerialPort getSerialPort() {
         try {
-            Enumeration e = CommPortIdentifier.getPortIdentifiers();
+            Enumeration<CommPortIdentifier> e = CommPortIdentifier.getPortIdentifiers();
 
             while (e.hasMoreElements()) {
                 CommPortIdentifier id = (CommPortIdentifier) e.nextElement();

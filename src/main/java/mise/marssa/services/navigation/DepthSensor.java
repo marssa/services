@@ -10,12 +10,12 @@ import net.sf.marineapi.nmea.sentence.DBTSentence;
 import net.sf.marineapi.nmea.sentence.DPTSentence;
 import net.sf.marineapi.nmea.sentence.MTWSentence;
 import net.sf.marineapi.nmea.sentence.SentenceId;
-import mise.marssa.footprint.data_types.float_datatypes.distance.ADistance;
-import mise.marssa.footprint.data_types.float_datatypes.distance.Metres;
-import mise.marssa.footprint.data_types.float_datatypes.temperature.ATemperature;
-import mise.marssa.footprint.data_types.float_datatypes.temperature.DegreesCelcius;
+import mise.marssa.footprint.datatypes.decimal.distance.ADistance;
+import mise.marssa.footprint.datatypes.decimal.distance.Metres;
+import mise.marssa.footprint.datatypes.decimal.temperature.ATemperature;
+import mise.marssa.footprint.datatypes.decimal.temperature.DegreesCelcius;
 import mise.marssa.footprint.exceptions.OutOfRange;
-import mise.marssa.footprint.interfaces.navigation_equipment.IDepthSensor;
+import mise.marssa.footprint.interfaces.navigation.IDepthSensor;
 
 /**
  * @author Warren Zahra

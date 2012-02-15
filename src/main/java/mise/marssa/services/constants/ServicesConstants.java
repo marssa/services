@@ -3,7 +3,7 @@
  */
 package mise.marssa.services.constants;
 
-import mise.marssa.footprint.data_types.integer_datatypes.MInteger;
+import mise.marssa.footprint.datatypes.integer.MInteger;
 
 /**
  * @author Clayton Tabone

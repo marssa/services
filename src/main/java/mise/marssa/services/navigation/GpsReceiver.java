@@ -10,21 +10,21 @@ import de.taimos.gpsd4java.backend.GPSdEndpoint;
 import de.taimos.gpsd4java.types.ParseException;
 import de.taimos.gpsd4java.types.TPVObject;
 import mise.marssa.services.constants.ServicesConstants;
-import mise.marssa.footprint.data_types.MDate;
-import mise.marssa.footprint.data_types.MString;
-import mise.marssa.footprint.data_types.time.Hours;
-import mise.marssa.footprint.data_types.composite_datatypes.Coordinate;
-import mise.marssa.footprint.data_types.composite_datatypes.Latitude;
-import mise.marssa.footprint.data_types.composite_datatypes.Longitude;
-import mise.marssa.footprint.data_types.float_datatypes.DegreesFloat;
-import mise.marssa.footprint.data_types.float_datatypes.MFloat;
-import mise.marssa.footprint.data_types.float_datatypes.speed.Knots;
-import mise.marssa.footprint.data_types.integer_datatypes.DegreesInteger;
-import mise.marssa.footprint.data_types.integer_datatypes.MInteger;
+import mise.marssa.footprint.datatypes.MDate;
+import mise.marssa.footprint.datatypes.MString;
+import mise.marssa.footprint.datatypes.composite.Coordinate;
+import mise.marssa.footprint.datatypes.composite.Latitude;
+import mise.marssa.footprint.datatypes.composite.Longitude;
+import mise.marssa.footprint.datatypes.decimal.DegreesFloat;
+import mise.marssa.footprint.datatypes.decimal.MFloat;
+import mise.marssa.footprint.datatypes.decimal.speed.Knots;
+import mise.marssa.footprint.datatypes.integer.DegreesInteger;
+import mise.marssa.footprint.datatypes.integer.MInteger;
+import mise.marssa.footprint.datatypes.time.Hours;
 import mise.marssa.footprint.exceptions.NoConnection;
 import mise.marssa.footprint.exceptions.NoValue;
 import mise.marssa.footprint.exceptions.OutOfRange;
-import mise.marssa.footprint.interfaces.navigation_equipment.IGpsReceiver;
+import mise.marssa.footprint.interfaces.navigation.IGpsReceiver;
 
 /**
  * @author Clayton Tabone

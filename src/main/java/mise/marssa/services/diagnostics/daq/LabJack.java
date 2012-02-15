@@ -22,11 +22,11 @@ import net.wimpi.modbus.msg.WriteSingleRegisterRequest;
 import net.wimpi.modbus.net.TCPMasterConnection;
 import net.wimpi.modbus.procimg.SimpleRegister;
 
-import mise.marssa.footprint.data_types.MBoolean;
-import mise.marssa.footprint.data_types.MString;
-import mise.marssa.footprint.data_types.float_datatypes.MFloat;
-import mise.marssa.footprint.data_types.integer_datatypes.MInteger;
-import mise.marssa.footprint.data_types.integer_datatypes.MLong;
+import mise.marssa.footprint.datatypes.MBoolean;
+import mise.marssa.footprint.datatypes.MString;
+import mise.marssa.footprint.datatypes.decimal.MFloat;
+import mise.marssa.footprint.datatypes.integer.MInteger;
+import mise.marssa.footprint.datatypes.integer.MLong;
 import mise.marssa.footprint.exceptions.ConfigurationError;
 import mise.marssa.footprint.exceptions.NoConnection;
 import mise.marssa.footprint.exceptions.OutOfRange;

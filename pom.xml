@@ -7,11 +7,12 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>bundle</packaging>
 
-	<name>MARSSA services OSGi Bundle</name>
+	<name>MARSSA Services OSGi Bundle</name>
 	<url>http://www.marsec-xl-projects.org/projects/services</url>
 	<description>This project was created specifically to handle the low level services which are offered by the MARSSA backend.</description>
 
 	<properties>
+		<javaVersion>1.6</javaVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -94,17 +95,47 @@
 
 	<build>
 		<plugins>
+			<!-- Specify Java compiler version -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>${javaVersion}</source>
+					<target>${javaVersion}</target>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.slf4j</groupId>
+						<artifactId>slf4j-simple</artifactId>
+						<version>1.6.4</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+
+			<!-- Bundle artifact as OSGi bundle -->
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
-				<version>2.2.0</version>
+				<version>2.3.6</version>
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
 						<Bundle-Activator>mise.marssa.services.Activator</Bundle-Activator>
+						<Embed-Dependency>*;scope=compile|runtime;inline=false;artifactId=!footprint|libraries</Embed-Dependency>
 					</instructions>
 				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>install</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
+
+			<!-- Deploy to alternate repository for github -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-deploy-plugin</artifactId>

@@ -5,8 +5,8 @@ package mise.marssa.services.control;
 
 import mise.marssa.footprint.interfaces.control.IController;
 import mise.marssa.footprint.interfaces.control.IRamping;
-import mise.marssa.footprint.data_types.integer_datatypes.MInteger;
-import mise.marssa.footprint.data_types.float_datatypes.MFloat;
+import mise.marssa.footprint.datatypes.decimal.MFloat;
+import mise.marssa.footprint.datatypes.integer.MInteger;
 import mise.marssa.footprint.exceptions.ConfigurationError;
 import mise.marssa.footprint.exceptions.NoConnection;
 import mise.marssa.footprint.exceptions.OutOfRange;
