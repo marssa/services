@@ -4,6 +4,13 @@
 package mise.marssa.services.navigation;
 
 
+import mise.marssa.footprint.datatypes.decimal.distance.ADistance;
+import mise.marssa.footprint.datatypes.decimal.distance.Metres;
+import mise.marssa.footprint.datatypes.decimal.temperature.ATemperature;
+import mise.marssa.footprint.datatypes.decimal.temperature.DegreesCelcius;
+import mise.marssa.footprint.exceptions.OutOfRange;
+import mise.marssa.footprint.interfaces.navigation.IDepthSensor;
+import mise.marssa.footprint.logger.MMarker;
 import net.sf.marineapi.nmea.event.SentenceEvent;
 import net.sf.marineapi.nmea.event.SentenceListener;
 import net.sf.marineapi.nmea.io.SentenceReader;
@@ -11,18 +18,17 @@ import net.sf.marineapi.nmea.sentence.DBTSentence;
 import net.sf.marineapi.nmea.sentence.DPTSentence;
 import net.sf.marineapi.nmea.sentence.MTWSentence;
 import net.sf.marineapi.nmea.sentence.SentenceId;
-import mise.marssa.footprint.data_types.float_datatypes.distance.ADistance;
-import mise.marssa.footprint.data_types.float_datatypes.distance.Metres;
-import mise.marssa.footprint.data_types.float_datatypes.temperature.ATemperature;
-import mise.marssa.footprint.data_types.float_datatypes.temperature.DegreesCelcius;
-import mise.marssa.footprint.exceptions.OutOfRange;
-import mise.marssa.footprint.interfaces.navigation_equipment.IDepthSensor;
+
+import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.Logger;
 
 /**
  * @author Warren Zahra
  *
  */
 public class DepthSensor implements IDepthSensor, SentenceListener {
+	static Logger depthSensorLogger = (Logger) LoggerFactory.getLogger(DepthSensor.class);
 	SentenceReader reader;
 	
 	Metres depthMetres = null;
@@ -33,13 +39,17 @@ public class DepthSensor implements IDepthSensor, SentenceListener {
         reader.addSentenceListener(this, "MTW");
         reader.addSentenceListener(this, SentenceId.DBT);
         reader.addSentenceListener(this, SentenceId.DPT);
+        String[] sentenceIDs = {"MTW","DBT","DPT"};
+        depthSensorLogger.info("A depth sensor with the following Sentence id is instantiated",sentenceIDs);
 	}
 	
 	public ADistance getDepthMetres() throws OutOfRange{
+		depthSensorLogger.debug(MMarker.GETTER,"Returning Depth in metres {} .",depthMetres.getValue());
 		return depthMetres;
 	}
 	
 	public ATemperature getTemperatureDegrees(){
+		depthSensorLogger.debug(MMarker.GETTER,"Returning Temperature in degreesCelsius {} .",temperatureDegrees.getValue());
 		return temperatureDegrees;
 	}
 	
@@ -53,7 +63,7 @@ public class DepthSensor implements IDepthSensor, SentenceListener {
 	public void sentenceRead(SentenceEvent event) {
 		
 		String sid = event.getSentence().getSentenceId().toString();
-		System.out.println("Received sentence with sid = " + sid);
+		depthSensorLogger.debug("Sentence received is of Id type",sid);
 		try {
 	        if (sid.equals("MTW")) {
 	        	MTWSentence mtw = (MTWSentence) event.getSentence();
@@ -69,6 +79,7 @@ public class DepthSensor implements IDepthSensor, SentenceListener {
 	        	
 	        }
 		} catch (OutOfRange e) {
+			depthSensorLogger.error("Value is out of range",new OutOfRange());
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
