@@ -33,7 +33,7 @@ import ch.qos.logback.classic.Logger;
  * 
  */
 public class DepthSensor implements IDepthSensor, SentenceListener {
-	static Logger depthSensorLogger = (Logger) LoggerFactory.getLogger(DepthSensor.class);
+	private static Logger DepthSensor = (Logger) LoggerFactory.getLogger("DepthSensor");
 	SentenceReader reader;
 
 	Metres depthMetres = null;
@@ -45,16 +45,16 @@ public class DepthSensor implements IDepthSensor, SentenceListener {
 		reader.addSentenceListener(this, SentenceId.DBT);
 		reader.addSentenceListener(this, SentenceId.DPT);
         String[] sentenceIDs = {"MTW","DBT","DPT"};
-        depthSensorLogger.info("A depth sensor with the following Sentence id is instantiated",sentenceIDs);
+        DepthSensor.info("A depth sensor with the following Sentence id is instantiated",sentenceIDs);
 	}
 
 	public ADistance getDepthMetres() throws OutOfRange {
-		depthSensorLogger.debug(MMarker.GETTER,"Returning Depth in metres {} .",depthMetres.getValue());
+		DepthSensor.trace(MMarker.GETTER,"Returning Depth in metres {} .",depthMetres.getValue());
 		return depthMetres;
 	}
 
 	public ATemperature getTemperatureDegrees() {
-		depthSensorLogger.debug(MMarker.GETTER,"Returning Temperature in degreesCelsius {} .",temperatureDegrees.getValue());
+		DepthSensor.trace(MMarker.GETTER,"Returning Temperature in degreesCelsius {} .",temperatureDegrees.getValue());
 		return temperatureDegrees;
 	}
 
@@ -70,12 +70,11 @@ public class DepthSensor implements IDepthSensor, SentenceListener {
 	public void sentenceRead(SentenceEvent event) {
 
 		String sid = event.getSentence().getSentenceId().toString();
-		depthSensorLogger.debug("Sentence received is of Id type",sid);
+		DepthSensor.debug("Sentence received is of Id type",sid);
 		try {
 			if (sid.equals("MTW")) {
 				MTWSentence mtw = (MTWSentence) event.getSentence();
-				temperatureDegrees = new DegreesCelcius(
-						(float) mtw.getTemperature());
+				temperatureDegrees = new DegreesCelcius((float) mtw.getTemperature());
 
 			} else if (sid.equals("DBT")) {
 				DBTSentence dbt = (DBTSentence) event.getSentence();
@@ -87,9 +86,9 @@ public class DepthSensor implements IDepthSensor, SentenceListener {
 
 			}
 		} catch (OutOfRange e) {
-			depthSensorLogger.error("Value is out of range",new OutOfRange());
+			DepthSensor.debug("Value is out of range",new OutOfRange());
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 }

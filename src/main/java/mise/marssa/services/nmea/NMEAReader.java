@@ -75,7 +75,7 @@ import ch.qos.logback.classic.Logger;
  */
 public class NMEAReader implements SentenceListener, ISensors {
 
-	static Logger NMEAReaderLogger = (Logger) LoggerFactory.getLogger(NMEAReader.class);
+	private static Logger NMEAReader = (Logger) LoggerFactory.getLogger("NMEAReader");
 	SentenceReader sr;
 	DepthSensor depthSensor;
 	SpeedSensor speedSensor;
@@ -84,31 +84,31 @@ public class NMEAReader implements SentenceListener, ISensors {
 	
     public NMEAReader() {
     	 try {
-    		 NMEAReaderLogger.info("Getting SerialPort");
+    		 NMEAReader.debug("Getting SerialPort");
              SerialPort sp = getSerialPort();
 
              if (sp != null) {
-            	 NMEAReaderLogger.debug("Creating a new Sentence reader");
+            	 NMEAReader.debug("Creating a new Sentence reader");
                  InputStream is = sp.getInputStream();
                  sr = new SentenceReader(is);
                  sr.addSentenceListener(this);
-                 NMEAReaderLogger.info("Starting Sentence reader");
+                 NMEAReader.debug("Starting Sentence reader");
                  sr.start();
              }
 
          } catch (IOException e) {
-        	 NMEAReaderLogger.error("IOException",new IOException());
+        	 NMEAReader.error("IOException",new IOException());
              e.printStackTrace();
          }
     }
 	
 	public IDepthSensor getDepthSensor() {
-		NMEAReaderLogger.debug(MMarker.GETTER,"Returning an instance of depthSensor");
+		NMEAReader.trace(MMarker.GETTER,"Returning an instance of depthSensor");
     	return depthSensor;
     }
     
     public ISpeedSensor getSpeedSensor() {
-    	NMEAReaderLogger.debug(MMarker.GETTER,"Returning an instance of speedSensor");
+    	NMEAReader.trace(MMarker.GETTER,"Returning an instance of speedSensor");
 		return speedSensor;
 	}
     /*
@@ -116,7 +116,7 @@ public class NMEAReader implements SentenceListener, ISensors {
      * @see net.sf.marineapi.nmea.event.SentenceListener#readingPaused()
      */
     public void readingPaused() {
-    	NMEAReaderLogger.debug("Reading paused");
+    	NMEAReader.trace("Reading paused");
         System.out.println("-- Paused --");
     }
 
@@ -125,7 +125,7 @@ public class NMEAReader implements SentenceListener, ISensors {
      * @see net.sf.marineapi.nmea.event.SentenceListener#readingStarted()
      */
     public void readingStarted() {
-    	NMEAReaderLogger.debug("Reading started");
+    	NMEAReader.trace("Reading started");
         System.out.println("-- Started --");
     }
 
@@ -134,7 +134,7 @@ public class NMEAReader implements SentenceListener, ISensors {
      * @see net.sf.marineapi.nmea.event.SentenceListener#readingStopped()
      */
     public void readingStopped() {
-    	NMEAReaderLogger.debug("Reading stopped");
+    	NMEAReader.trace("Reading stopped");
         System.out.println("-- Stopped --");
     }
 
@@ -154,17 +154,18 @@ public class NMEAReader implements SentenceListener, ISensors {
 		
     	if (tid=="SD")
     	{
-    		NMEAReaderLogger.debug("Received TalkerId {} .",tid);
+    		NMEAReader.trace("Received TalkerId {} .",tid);
     		if (depthSensor == null) {
-    			NMEAReaderLogger.info("Creating an Instance of Depth Sensor");
+    			NMEAReader.info("Creating an Instance of Depth Sensor");
     			depthSensor = new DepthSensor(sr);
     		}
     	}
     	
     	if (tid=="DM")
     	{
+    		NMEAReader.trace("Received TalkerId {} .",tid);
     		if (speedSensor == null) {
-    			NMEAReaderLogger.info("Creating an Instance of Speed Sensor");
+    			NMEAReader.info("Creating an Instance of Speed Sensor");
     			speedSensor = new SpeedSensor(sr);
     		}
     		
@@ -182,7 +183,7 @@ public class NMEAReader implements SentenceListener, ISensors {
     private SerialPort getSerialPort() {
         try {
             Enumeration<CommPortIdentifier> e = CommPortIdentifier.getPortIdentifiers();
-            NMEAReaderLogger.debug("GettingPortIdentifier");
+            NMEAReader.debug("GettingPortIdentifier");
             while (e.hasMoreElements()) {
                 CommPortIdentifier id = (CommPortIdentifier) e.nextElement();
 
@@ -190,53 +191,54 @@ public class NMEAReader implements SentenceListener, ISensors {
 
                     SerialPort sp = (SerialPort) id.open("SerialExample", 30);
                     Object[] serialConnection = {4800, SerialPort.DATABITS_8,SerialPort.STOPBITS_1,SerialPort.PARITY_NONE};
-        	    	NMEAReaderLogger.info("Parameters for SerialPort are BaudRate{} . DataBits{} . StopBits {} . Parity {} .",serialConnection);
+        	    	NMEAReader.info("Parameters for SerialPort are BaudRate{} . DataBits{} . StopBits {} . Parity {} .",serialConnection);
                     sp.setSerialPortParams(4800, SerialPort.DATABITS_8,SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
 
                     InputStream is = sp.getInputStream();
                     InputStreamReader isr = new InputStreamReader(is);
                     BufferedReader buf = new BufferedReader(isr);
 
-                    System.out.println("Scanning port " + sp.getName());
+                    //System.out.println("Scanning port " + sp.getName());
 
                     // try each port few times before giving up
                     for (int i = 0; i < 5; i++) {
                     	try {
                         	if(buf.ready()) {
-	                        	System.out.println("Buffer ready, reading data ...");
-	                        	NMEAReaderLogger.debug("Buffer is ready and reading Data");
+	                        	//System.out.println("Buffer ready, reading data ...");
+	                        	NMEAReader.debug("Buffer is ready and reading Data");
 	                            String data = buf.readLine();
-	                            NMEAReaderLogger.debug("Discarding first line. Reading next line");
-	                            System.out.println("First line discarded. Reading next line ...");
+	                            NMEAReader.debug("Discarding first line. Reading next line");
+	                           // System.out.println("First line discarded. Reading next line ...");
 	                            data = buf.readLine();
-	                            System.out.println("Data is:" + data);
+	                           // System.out.println("Data is:" + data);
+	                            NMEAReader.trace("Data is:",data.toString());
 	                            if (SentenceValidator.isValid(data)) {
-	                                System.out.println("NMEA data found!");
-	                                NMEAReaderLogger.info("NMEA Data is found");
-	                                NMEAReaderLogger.debug(MMarker.GETTER,"Returning SerialPort {} .",sp.getName());
+	                               // System.out.println("NMEA data found!");
+	                                NMEAReader.info("NMEA Data is found");
+	                                NMEAReader.trace(MMarker.GETTER,"Returning SerialPort {} .",sp.getName());
 	                                return sp;
 	                            }
                         	} else {
-                        		System.out.println("Buffer not ready, inserting delay ...");
-                        		NMEAReaderLogger.debug("Buffer not ready inserting delay");
+                        		//System.out.println("Buffer not ready, inserting delay ...");
+                        		NMEAReader.trace("Buffer not ready inserting delay");
                         		Thread.sleep(500);
                         	}
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }
                     }
-                    NMEAReaderLogger.info("Closing InputStream, InputStreamReader and BufferReader");
+                    NMEAReader.trace("Closing InputStream, InputStreamReader and BufferReader");
                     is.close();
                     isr.close();
                     buf.close();
                 }
             }
-            System.out.println("NMEA data was not found..");
-            NMEAReaderLogger.warn("NMEA data was not found");
+           // System.out.println("NMEA data was not found..");
+            NMEAReader.warn("NMEA data was not found");
 
         } catch (Exception e) {
-        	NMEAReaderLogger.error("Exception", new Exception());
-            e.printStackTrace();
+        	NMEAReader.error("Exception", new Exception());
+            //e.printStackTrace();
         }
 
         return null;

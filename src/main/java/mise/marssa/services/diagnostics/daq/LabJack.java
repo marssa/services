@@ -11,6 +11,15 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import mise.marssa.footprint.datatypes.MBoolean;
+import mise.marssa.footprint.datatypes.MString;
+import mise.marssa.footprint.datatypes.decimal.MFloat;
+import mise.marssa.footprint.datatypes.integer.MInteger;
+import mise.marssa.footprint.datatypes.integer.MLong;
+import mise.marssa.footprint.exceptions.ConfigurationError;
+import mise.marssa.footprint.exceptions.NoConnection;
+import mise.marssa.footprint.exceptions.OutOfRange;
+import mise.marssa.footprint.logger.MMarker;
 import net.wimpi.modbus.ModbusException;
 import net.wimpi.modbus.ModbusIOException;
 import net.wimpi.modbus.ModbusSlaveException;
@@ -22,14 +31,7 @@ import net.wimpi.modbus.msg.WriteSingleRegisterRequest;
 import net.wimpi.modbus.net.TCPMasterConnection;
 import net.wimpi.modbus.procimg.SimpleRegister;
 
-import mise.marssa.footprint.datatypes.MBoolean;
-import mise.marssa.footprint.datatypes.MString;
-import mise.marssa.footprint.datatypes.decimal.MFloat;
-import mise.marssa.footprint.datatypes.integer.MInteger;
-import mise.marssa.footprint.datatypes.integer.MLong;
-import mise.marssa.footprint.exceptions.ConfigurationError;
-import mise.marssa.footprint.exceptions.NoConnection;
-import mise.marssa.footprint.exceptions.OutOfRange;
+import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Logger;
 
@@ -39,7 +41,7 @@ import ch.qos.logback.classic.Logger;
  */
 public class LabJack {
 	
-	static Logger labjackLogger = (Logger) LoggerFactory.getLogger(LabJack.class);
+	private static Logger labjackLogger = (Logger) LoggerFactory.getLogger("LabJack");
 	
 	// Register addresses
 	static public final MInteger FIO4_ADDR = new MInteger(6004);

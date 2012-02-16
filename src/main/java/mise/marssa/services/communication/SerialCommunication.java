@@ -26,7 +26,7 @@ public class SerialCommunication {
 	/**
 	 * 
 	 */
-	static Logger serialCommunicationLogger = (Logger) LoggerFactory.getLogger(SerialCommunication.class);
+	private static Logger serialCommunicationLogger = (Logger) LoggerFactory.getLogger(SerialCommunication.class);
 		InputStream in;
 		OutputStream out;
 		
@@ -38,9 +38,9 @@ public class SerialCommunication {
 	        
 	    public void connect ( String portName, int baudrate, int dataBits,int stopBits,int parity) throws Exception
 	    {
-	    	serialCommunicationLogger.info("Connected with port {}.", portName);
+	    	serialCommunicationLogger.info(MMarker.CONNECTION,"Connected with port {}.", portName);
 	    	Object[] serialConnection = {baudrate, dataBits,stopBits,parity};
-	    	serialCommunicationLogger.info("Parameters for SerialPort are BaudRate{} . DataBits{} . StopBits {} . Parity {} .",serialConnection);
+	    	serialCommunicationLogger.info(MMarker.CONSTRUCTOR,"Parameters for SerialPort are BaudRate{} . DataBits{} . StopBits {} . Parity {} .",serialConnection);
 	    	
 	        CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
 	        if ( portIdentifier.isCurrentlyOwned() )
@@ -71,7 +71,7 @@ public class SerialCommunication {
 	    
 	    /** */
 	    public InputStream getInputStream(){
-	    	serialCommunicationLogger.debug(MMarker.GETTER,"Returning InputStream  {} .", in);
+	    	serialCommunicationLogger.trace(MMarker.GETTER,"Returning InputStream  {} .", in);
 	    	return in;
 	    }
 	    
@@ -83,6 +83,7 @@ public class SerialCommunication {
 	             {
 	                 while ( ( len = this.in.read(buffer)) > -1 )
 	                 {
+	                	 serialCommunicationLogger.trace("Input stream is" +new String(buffer,0,len));
 	                     System.out.print(new String(buffer,0,len));
 	                 }
 	             }
@@ -100,13 +101,14 @@ public class SerialCommunication {
 	            try
 	            {                
 	                out.write(outputSerialSentence.getBytes()); 
-	                serialCommunicationLogger.info("Sending {} . data to serial",outputSerialSentence);
+	                serialCommunicationLogger.trace("Sending {} . data to serial",outputSerialSentence);
 	               // System.out.println("Data send" + outputSerialSentence);
 	                out.flush();
 	            }
 	            catch ( IOException e )
 	            {//TODO exception handling 
-	                e.printStackTrace();
+	               // e.printStackTrace();
+	                serialCommunicationLogger.debug("IOException handling",new IOException());
 	            }            
 	        }
 	    }

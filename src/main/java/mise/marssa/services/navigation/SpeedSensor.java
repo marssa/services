@@ -41,7 +41,7 @@ import ch.qos.logback.classic.Logger;
  */
 public class SpeedSensor implements ISpeedSensor, SentenceListener {
 
-	static Logger speedSensorLogger = (Logger) LoggerFactory.getLogger(SpeedSensor.class);
+	private static Logger SpeedSensor = (Logger) LoggerFactory.getLogger("SpeedSensor");
 	SentenceReader reader;
 	Knots speedKnots = null;
 	Metres depthMetres = null;
@@ -56,31 +56,31 @@ public class SpeedSensor implements ISpeedSensor, SentenceListener {
         reader.addSentenceListener(this, SentenceId.DBT);
         reader.addSentenceListener(this, SentenceId.DPT);
         String[] sentenceIDs = {"MTW","VHW","DBT","DPT"};
-        speedSensorLogger.info("A speed sensor with the following Sentence id is instantiated",sentenceIDs);
+        SpeedSensor.info("A speed sensor with the following Sentence id is instantiated",sentenceIDs);
 	}
 	
 	public ASpeed getSpeedKnots() throws OutOfRange{
-		speedSensorLogger.debug(MMarker.GETTER,"Returning speed in knots {} .",speedKnots.getValue());
+		SpeedSensor.trace(MMarker.GETTER,"Returning speed in knots {} .",speedKnots.getValue());
 		return speedKnots;
 	}
 		
 	public DegreesFloat getDegreesTrue() throws OutOfRange{
-		speedSensorLogger.debug(MMarker.GETTER,"Returning Degrees in degreesTrue {} .",degreesTrue.getValue());
+		SpeedSensor.trace(MMarker.GETTER,"Returning Degrees in degreesTrue {} .",degreesTrue.getValue());
 		return degreesTrue;
 	}
 
 	public DegreesFloat getDegreesMagnetic() throws OutOfRange{
-		speedSensorLogger.debug(MMarker.GETTER,"Returning Degrees in degreesMagnetic {} .",degreesMagnetic.getValue());
+		SpeedSensor.trace(MMarker.GETTER,"Returning Degrees in degreesMagnetic {} .",degreesMagnetic.getValue());
 		return degreesMagnetic;
 	}	
 	
 	public ADistance getDepthMetres() throws OutOfRange{
-		speedSensorLogger.debug(MMarker.GETTER,"Returning Depth in metres {} .",depthMetres.getValue());
+		SpeedSensor.trace(MMarker.GETTER,"Returning Depth in metres {} .",depthMetres.getValue());
 		return depthMetres;
 	}	
 	
 	public ATemperature getTemperature(){
-		speedSensorLogger.debug(MMarker.GETTER,"Returning Temperature in degreesCelsius {} .",temperatureDegrees.getValue());
+		SpeedSensor.trace(MMarker.GETTER,"Returning Temperature in degreesCelsius {} .",temperatureDegrees.getValue());
 		return temperatureDegrees;
 	}
 
@@ -92,7 +92,7 @@ public class SpeedSensor implements ISpeedSensor, SentenceListener {
 	
 	public void sentenceRead(SentenceEvent event) {
 		String sid = event.getSentence().getSentenceId().toString();
-		speedSensorLogger.debug("Sentence received is of Id type",sid);
+		SpeedSensor.debug("Sentence received is of Id type",sid);
 		try {
 	        if (sid.equals("MTW")) {
 	        	MTWSentence mtw = (MTWSentence) event.getSentence();
@@ -114,9 +114,9 @@ public class SpeedSensor implements ISpeedSensor, SentenceListener {
 	      		}
 			}
 	        catch (OutOfRange e) {
-	        	speedSensorLogger.error("Value is out of range",new OutOfRange());
+	        	SpeedSensor.debug("Value is out of range",new OutOfRange());
 	        	// TODO Auto-generated catch block
-	        	e.printStackTrace();
+	        	//e.printStackTrace();
 		}
 	}
 
