@@ -43,11 +43,6 @@ import net.sf.marineapi.nmea.parser.SentenceFactory;
 import net.sf.marineapi.nmea.sentence.Sentence;
 import net.sf.marineapi.nmea.sentence.SentenceValidator;
 
-import mise.marssa.footprint.interfaces.navigation.IDepthSensor;
-import mise.marssa.footprint.interfaces.navigation.ISensors;
-import mise.marssa.footprint.interfaces.navigation.ISpeedSensor;
-import mise.marssa.services.navigation.DepthSensor;
-import mise.marssa.services.navigation.SpeedSensor;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Logger;

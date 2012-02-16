@@ -1,5 +1,14 @@
 package mise.marssa.services.control;
 
+import mise.marssa.footprint.datatypes.decimal.MFloat;
+import mise.marssa.footprint.datatypes.integer.MInteger;
+import mise.marssa.footprint.exceptions.ConfigurationError;
+import mise.marssa.footprint.exceptions.NoConnection;
+import mise.marssa.footprint.exceptions.OutOfRange;
+import mise.marssa.footprint.interfaces.control.IController;
+import mise.marssa.services.constants.ServicesTestConstants;
+import mise.marssa.services.control.Ramping.RampingType;
+
 import org.restlet.Application;
 import org.restlet.Component;
 import org.restlet.Request;
@@ -9,15 +18,6 @@ import org.restlet.data.MediaType;
 import org.restlet.data.Protocol;
 import org.restlet.data.Status;
 import org.restlet.routing.Router;
-import mise.marssa.services.constants.ServicesTestConstants;
-import mise.marssa.services.control.Ramping;
-import mise.marssa.services.control.Ramping.RampingType;
-import mise.marssa.footprint.datatypes.decimal.MFloat;
-import mise.marssa.footprint.datatypes.integer.MInteger;
-import mise.marssa.footprint.exceptions.ConfigurationError;
-import mise.marssa.footprint.exceptions.NoConnection;
-import mise.marssa.footprint.exceptions.OutOfRange;
-import mise.marssa.footprint.interfaces.control.IController;
 
 public class RampingTest {
 

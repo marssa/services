@@ -12,6 +12,7 @@
 	<description>This project was created specifically to handle the low level services which are offered by the MARSSA backend.</description>
 
 	<properties>
+		<javaVersion>1.6</javaVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -25,6 +26,33 @@
 		<connection>ssh</connection>
 		<developerConnection>Clayton Tabone, Warren Zahra, Amanda Fenech, Alan Grech</developerConnection>
 	</scm>
+
+	<developers>
+		<developer>
+			<email>taboneclayton@gmail.com</email>
+			<name>Clayton Tabone</name>
+			<url>https://github.com/taboneclayton</url>
+			<id>taboneclayton</id>
+		</developer>
+		<developer>
+			<email>warren.zahra@marsec-xl.org</email>
+			<name>Warren Zahra</name>
+			<url>https://github.com/warrenzahra</url>
+			<id>warrenzahra</id>
+		</developer>
+		<developer>
+			<email>amanda.fenech@marsec-xl.org</email>
+			<name>Amanda Fenech</name>
+			<url>https://github.com/Adnama</url>
+			<id>Adnama</id>
+		</developer>
+		<developer>
+			<email>alangrech@gmail.com</email>
+			<name>Alan Grech</name>
+			<url>https://github.com/alangrech</url>
+			<id>alangrech</id>
+		</developer>
+	</developers>
 
 	<issueManagement>
 		<system>Redmine</system>
@@ -42,7 +70,7 @@
 			<url>https://raw.github.com/marssa/marssa-mvn-repo/master/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
-	
+
 	<repositories>
 		<repository>
 			<id>marssa-mvn-repo</id>
@@ -72,17 +100,43 @@
 
 	<build>
 		<plugins>
+			<!-- Specify Java compiler version -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<extensions>true</extensions>
+				<configuration>
+					<source>${javaVersion}</source>
+					<target>${javaVersion}</target>
+				</configuration>
+			</plugin>
+
+			<!-- Bundle artifact as OSGi bundle -->
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
-				<version>2.2.0</version>
+				<version>2.3.6</version>
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
 						<Bundle-Activator>mise.marssa.services.Activator</Bundle-Activator>
+						<excludeDependencies>false</excludeDependencies>
+						<Embed-Dependency>*;scope=compile|runtime;inline=false;artifactId=!footprint|libraries</Embed-Dependency>
 					</instructions>
 				</configuration>
+				<executions>
+					<execution>
+						<id>install-bundle</id>
+						<phase>install</phase>
+						<goals>
+							<goal>install</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
+
+			<!-- Deploy to alternate repository for github -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-deploy-plugin</artifactId>
