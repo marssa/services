@@ -6,10 +6,6 @@ package mise.marssa.services.navigation;
 import java.io.IOException;
 import java.util.List;
 
-import de.taimos.gpsd4java.backend.GPSdEndpoint;
-import de.taimos.gpsd4java.types.ParseException;
-import de.taimos.gpsd4java.types.TPVObject;
-import mise.marssa.services.constants.ServicesConstants;
 import mise.marssa.footprint.datatypes.MDate;
 import mise.marssa.footprint.datatypes.MString;
 import mise.marssa.footprint.datatypes.composite.Coordinate;
@@ -85,8 +81,7 @@ public class GpsReceiver implements IGpsReceiver {
 			} catch(IOException e) {
 				GPSReceiverLogger.error("IOException",new IOException());
 				if(i > ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
-					//TODO should we let host and port in every class be global so that when another gps is instantiated
-					// we can refer to that particular GPS
+					//TODO should we let host and port in every class be global so that when another gps is instantiated we can refer to that particular GPS
 					GPSReceiverLogger.error("IOException- Could not connect to the GPS",new NoConnection());
 					throw new NoConnection(e.getMessage(), e.getCause());
 				}
