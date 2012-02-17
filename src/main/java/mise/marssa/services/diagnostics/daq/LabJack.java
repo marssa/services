@@ -287,14 +287,14 @@ public class LabJack {
 			activeConnections.iterator().remove();
 		}
 		
-		public LabJackConnection getConnection(MString host, MInteger port, TimersEnabled numTimers) throws UnknownHostException, NoConnection {
+		public LabJackConnection getConnection(MString host, MInteger port) throws UnknownHostException, NoConnection {
 			if(activeConnections != null) {
 				for(LabJackConnection conn : activeConnections) {
 					if(conn.inUse(host, port))
 						return conn;
 				}
 			}
-			LabJack lj = new LabJack(host, port, numTimers);
+			LabJack lj = new LabJack(host, port);
 			LabJackConnection newConnectionPair = new LabJackConnection(host, port, lj);
 			activeConnections.add(newConnectionPair);
 			return newConnectionPair;
@@ -316,7 +316,11 @@ public class LabJack {
 	
 	private MLong timerClockDivisor;
 	
-	private LabJack(MString host, MInteger port, TimersEnabled numTimers) throws UnknownHostException, NoConnection
+	//host and port variables
+	private MString host;
+	private MInteger port;
+	
+	private LabJack(MString host, MInteger port) throws UnknownHostException, NoConnection
 	{
 		Object[] labjackInformation = {host.toString(),port.getValue(),numTimers};
 		labjackLogger.info("Connecting to a Labjack having host {} . port {} . and enabling {} . timers", labjackInformation);
@@ -330,7 +334,9 @@ public class LabJack {
 		    writeConnection = new TCPMasterConnection(address);
 		    writeConnection.setPort(port.getValue());
 		    writeConnection.connect();
-		    this.numTimers = numTimers;
+		    this.host= host;
+		    this.port = port;
+		    this.numTimers = TimersEnabled.TWO;
 		    this.write(NUM_TIMERS_ENABLED_ADDR, new MInteger(numTimers.ordinal()));
 		} catch (UnknownHostException e) {
 			labjackLogger.error("UnknownHostException- Cannot find host{} . ", host.toString(),new NoConnection());
@@ -368,17 +374,46 @@ public class LabJack {
 	/**
      * This method return an instance to the singleton class LabJack<br />
      * Note: This method is thread-safe
+     * Note: Default Timers Enabled: two This can be changed using setNumEnabledTimers
      * @param host The host IP to which LabJack is connected 
      * @param port The host port to which LabJack is connected
      * @return singleton instance to the LabJack
      * @throws UnknownHostException
      * @throws NoConnection
+     * @see mise.marssa.control.LabJack.TimersEnabled
+     * @see mise.marssa.control.LabJack.setNumEnabledTimers
      */
-    public static synchronized LabJack getInstance(MString host, MInteger port, TimersEnabled numTimers) throws UnknownHostException, NoConnection {
+    public static synchronized LabJack getInstance(MString host, MInteger port) throws UnknownHostException, NoConnection {
+    	
     	labjackLogger.info("Getting a Labjack Instance");
-    	LabJackConnection connection = connectionPairs.getConnection(host, port, numTimers);
+    	LabJackConnection connection = connectionPairs.getConnection(host, port);
     	labjackLogger.debug(MMarker.GETTER,"Returning connection.lj" );
     	return connection.lj;
+    }
+    
+    /**
+     * Return host address
+     * @return host
+     */
+    public MString getHost(){
+    	return host;
+    }
+    /**
+     * return port number
+     * @return port
+     */
+    public MInteger getPort(){
+    	return port;
+    }
+    /**
+     * Set the number of Enabled Timers
+     * @param numTimers
+     * @throws NoConnection
+     * @see mise.marssa.control.LabJack.TimersEnabled
+     */
+    public void setNumEnabledTimers(TimersEnabled numTimers) throws NoConnection{
+    	this.numTimers = numTimers;
+	    this.write(NUM_TIMERS_ENABLED_ADDR, new MInteger(numTimers.ordinal()));
     }
     
     /**
