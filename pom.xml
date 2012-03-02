@@ -7,7 +7,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>bundle</packaging>
 
-	<name>MARSSA services OSGi Bundle</name>
+	<name>MARSSA Services OSGi Bundle</name>
 	<url>http://www.marsec-xl-projects.org/projects/services</url>
 	<description>This project was created specifically to handle the low level services which are offered by the MARSSA backend.</description>
 
@@ -22,9 +22,9 @@
 	</organization>
 
 	<scm>
-		<url>git@github.com:marssa/services.git</url>
-		<connection>ssh</connection>
-		<developerConnection>Clayton Tabone, Warren Zahra, Amanda Fenech, Alan Grech</developerConnection>
+		<url>https://github.com/marssa/services</url>
+		<connection>git://github.com/marssa/services.git</connection>
+		<developerConnection>scm:git:git@github.com:marssa/services.git</developerConnection>
 	</scm>
 
 	<developers>
