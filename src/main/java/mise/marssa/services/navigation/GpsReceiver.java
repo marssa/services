@@ -24,10 +24,12 @@ import mise.marssa.footprint.interfaces.navigation.IGpsReceiver;
 import mise.marssa.footprint.logger.MMarker;
 import mise.marssa.services.constants.ServicesConstants;
 
+import org.json.JSONException;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Logger;
 import de.taimos.gpsd4java.backend.GPSdEndpoint;
+import de.taimos.gpsd4java.backend.ResultParser;
 import de.taimos.gpsd4java.types.ParseException;
 import de.taimos.gpsd4java.types.TPVObject;
 
@@ -50,10 +52,9 @@ public class GpsReceiver implements IGpsReceiver {
 				host.toString(), port.getValue());
 		this.host = host;
 		this.port = port;
-	//	logger.error(MMarker.EXCEPTION, "IOException", new IOException());
-		ep = new GPSdEndpoint(host.getContents(), port.getValue());
-		ep.start();
 		try {
+			ep = new GPSdEndpoint(host.getContents(), port.getValue(), new ResultParser());
+			ep.start();
 			logger.info("GPSD version {} . started", ep.version());
 			logger.info("Enable watch mode for GPSD {} .", ep.watch(true, true));
 		} catch (IOException e) {
@@ -61,6 +62,9 @@ public class GpsReceiver implements IGpsReceiver {
 			throw new NoConnection(e.getMessage(), e.getCause());
 		} catch (ParseException e) {
 			logger.error(MMarker.EXCEPTION, "ParseException", e);
+			throw new NoValue(e.getMessage(), e.getCause());
+		} catch (JSONException e) {
+			logger.error(MMarker.EXCEPTION, "JSONException", e);
 			throw new NoValue(e.getMessage(), e.getCause());
 		}
 		logger.debug("Connected with a GPS with host: {} and port: {}",

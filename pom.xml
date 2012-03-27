@@ -11,6 +11,15 @@
 	<url>http://www.marsec-xl-projects.org/projects/services</url>
 	<description>This project was created specifically to handle the low level services which are offered by the MARSSA backend.</description>
 
+	<licenses>
+		<license>
+			<name>Apache 2</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+			<comments>A business-friendly OSS license</comments>
+		</license>
+	</licenses>
+
 	<properties>
 		<javaVersion>1.6</javaVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -72,6 +81,8 @@
 	</distributionManagement>
 
 	<repositories>
+		<!-- Temporary repository containing MARSSA artifacts and Java Modbus Library 
+			(jamod) -->
 		<repository>
 			<id>marssa-mvn-repo</id>
 			<name>MARSSA Repository on github.com</name>
@@ -87,14 +98,24 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>de.taimos</groupId>
+			<artifactId>gpsd4java</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>net.wimpi.modbus</groupId>
+			<artifactId>jamod</artifactId>
+			<version>1.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>mise.marssa</groupId>
-			<artifactId>libraries</artifactId>
+			<artifactId>footprint</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf</groupId>
 			<artifactId>marineapi</artifactId>
-			<version>0.4.134-SNAPSHOT</version>
+			<version>0.5.137-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
