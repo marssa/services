@@ -47,7 +47,7 @@ public class SpeedSensor implements ISpeedSensor, SentenceListener {
 	private static Logger SpeedSensor = (Logger) LoggerFactory.getLogger("SpeedSensor");
 	SentenceReader reader;
 	Knots speedKnots = null;
-	Metres depthMetres = null;
+	Metres depthMeters = null;
 	DegreesFloat degreesTrue = null;
 	DegreesFloat degreesMagnetic = null;
 	DegreesCelcius temperatureDegrees = null;
@@ -63,27 +63,27 @@ public class SpeedSensor implements ISpeedSensor, SentenceListener {
 	}
 	
 	public ASpeed getSpeedKnots() throws OutOfRange{
-		SpeedSensor.trace(MMarker.GETTER,"Returning speed in knots {} .",speedKnots.getValue());
+		SpeedSensor.trace(MMarker.GETTER,"Returning speed in knots {} .", speedKnots);
 		return speedKnots;
 	}
 		
 	public DegreesFloat getDegreesTrue() throws OutOfRange{
-		SpeedSensor.trace(MMarker.GETTER,"Returning Degrees in degreesTrue {} .",degreesTrue.getValue());
+		SpeedSensor.trace(MMarker.GETTER,"Returning Degrees in degreesTrue {} .", degreesTrue);
 		return degreesTrue;
 	}
 
 	public DegreesFloat getDegreesMagnetic() throws OutOfRange{
-		SpeedSensor.trace(MMarker.GETTER,"Returning Degrees in degreesMagnetic {} .",degreesMagnetic.getValue());
+		SpeedSensor.trace(MMarker.GETTER,"Returning Degrees in degreesMagnetic {} .", degreesMagnetic);
 		return degreesMagnetic;
 	}	
 	
-	public ADistance getDepthMetres() throws OutOfRange{
-		SpeedSensor.trace(MMarker.GETTER,"Returning Depth in metres {} .",depthMetres.getValue());
-		return depthMetres;
+	public ADistance getDepthMeters() throws OutOfRange{
+		SpeedSensor.trace(MMarker.GETTER,"Returning Depth in metres {} .", depthMeters);
+		return depthMeters;
 	}	
 	
 	public ATemperature getTemperature(){
-		SpeedSensor.trace(MMarker.GETTER,"Returning Temperature in degreesCelsius {} .",temperatureDegrees.getValue());
+		SpeedSensor.trace(MMarker.GETTER,"Returning Temperature in degreesCelsius {} .", temperatureDegrees);
 		return temperatureDegrees;
 	}
 
@@ -99,21 +99,21 @@ public class SpeedSensor implements ISpeedSensor, SentenceListener {
 		try {
 	        if (sid.equals("MTW")) {
 	        	MTWSentence mtw = (MTWSentence) event.getSentence();
-	        	temperatureDegrees = new DegreesCelcius((float) mtw.getTemperature());
+	        	temperatureDegrees = new DegreesCelcius(mtw.getTemperature());
 	        	
 	        } else if(sid.equals("DBT")) {
 	        	DBTSentence dbt = (DBTSentence) event.getSentence();
-				depthMetres = new Metres((float) dbt.getDepth());
+				depthMeters = new Metres(dbt.getDepth());
 	        	
 	        } else if(sid.equals("DPT")) {
 	        	DPTSentence dpt = (DPTSentence) event.getSentence();
-	        	depthMetres = new Metres((float) dpt.getDepth());
+	        	depthMeters = new Metres(dpt.getDepth());
 	        	
 	        }else if(sid.equals("VHW")) {
 	        	VHWSentence vhw = (VHWSentence) event.getSentence();
-	        	speedKnots = new Knots((float) vhw.getSpeedKnots());
-	        	degreesMagnetic = new DegreesFloat((float) vhw.getDegreesMagnetic());
-	        	degreesTrue = new DegreesFloat((float) vhw.getDegreesTrue());
+	        	speedKnots = new Knots(vhw.getSpeedKnots());
+	        	degreesMagnetic = new DegreesFloat(vhw.getDegreesMagnetic());
+	        	degreesTrue = new DegreesFloat(vhw.getDegreesTrue());
 	      		}
 			}
 	        catch (OutOfRange e) {

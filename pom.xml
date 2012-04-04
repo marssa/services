@@ -177,7 +177,7 @@
 				</configuration>
 				<executions>
 					<execution>
-						<phase>process-sources</phase>
+						<phase>process-resources</phase>
 						<goals>
 							<goal>format</goal>
 						</goals>

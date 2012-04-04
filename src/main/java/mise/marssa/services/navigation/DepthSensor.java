@@ -39,10 +39,11 @@ import ch.qos.logback.classic.Logger;
  * 
  */
 public class DepthSensor implements IDepthSensor, SentenceListener {
-	private static Logger DepthSensor = (Logger) LoggerFactory.getLogger("DepthSensor");
+	private static Logger DepthSensor = (Logger) LoggerFactory
+			.getLogger("DepthSensor");
 	SentenceReader reader;
 
-	Metres depthMetres = null;
+	Metres depthMeters = null;
 	DegreesCelcius temperatureDegrees = null;
 
 	public DepthSensor(SentenceReader reader) {
@@ -50,17 +51,22 @@ public class DepthSensor implements IDepthSensor, SentenceListener {
 		reader.addSentenceListener(this, "MTW");
 		reader.addSentenceListener(this, SentenceId.DBT);
 		reader.addSentenceListener(this, SentenceId.DPT);
-        String[] sentenceIDs = {"MTW","DBT","DPT"};
-        DepthSensor.info("A depth sensor with the following Sentence id is instantiated",sentenceIDs);
+		String[] sentenceIDs = { "MTW", "DBT", "DPT" };
+		DepthSensor
+				.info("A depth sensor with the following Sentence id is instantiated",
+						sentenceIDs);
 	}
 
-	public ADistance getDepthMetres() throws OutOfRange {
-		DepthSensor.trace(MMarker.GETTER,"Returning Depth in metres {} .",depthMetres.getValue());
-		return depthMetres;
+	public ADistance getDepthMeters() throws OutOfRange {
+		DepthSensor.trace(MMarker.GETTER, "Returning Depth in metres {} .",
+				depthMeters);
+		return depthMeters;
 	}
 
 	public ATemperature getTemperatureDegrees() {
-		DepthSensor.trace(MMarker.GETTER,"Returning Temperature in degreesCelsius {} .",temperatureDegrees.getValue());
+		DepthSensor.trace(MMarker.GETTER,
+				"Returning Temperature in degreesCelsius {} .",
+				temperatureDegrees);
 		return temperatureDegrees;
 	}
 
@@ -76,25 +82,25 @@ public class DepthSensor implements IDepthSensor, SentenceListener {
 	public void sentenceRead(SentenceEvent event) {
 
 		String sid = event.getSentence().getSentenceId().toString();
-		DepthSensor.debug("Sentence received is of Id type",sid);
+		DepthSensor.debug("Sentence received is of Id type", sid);
 		try {
 			if (sid.equals("MTW")) {
 				MTWSentence mtw = (MTWSentence) event.getSentence();
-				temperatureDegrees = new DegreesCelcius((float) mtw.getTemperature());
+				temperatureDegrees = new DegreesCelcius(mtw.getTemperature());
 
 			} else if (sid.equals("DBT")) {
 				DBTSentence dbt = (DBTSentence) event.getSentence();
-				depthMetres = new Metres((float) dbt.getDepth());
+				depthMeters = new Metres(dbt.getDepth());
 
 			} else if (sid.equals("DPT")) {
 				DPTSentence dpt = (DPTSentence) event.getSentence();
-				depthMetres = new Metres((float) dpt.getDepth());
+				depthMeters = new Metres(dpt.getDepth());
 
 			}
 		} catch (OutOfRange e) {
-			DepthSensor.debug("Value is out of range",new OutOfRange());
+			DepthSensor.debug("Value is out of range", new OutOfRange());
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			// e.printStackTrace();
 		}
 	}
 }

@@ -18,7 +18,7 @@ package mise.marssa.services.constants;
 import java.io.File;
 
 import mise.marssa.footprint.datatypes.MString;
-import mise.marssa.footprint.datatypes.decimal.MFloat;
+import mise.marssa.footprint.datatypes.decimal.MDecimal;
 import mise.marssa.footprint.datatypes.integer.MInteger;
 
 /**
@@ -68,9 +68,9 @@ public class ServicesTestConstants {
 	 * @author Clayton Tabone
 	 */
 	public final static class MOTOR {
-		public final static MFloat STEP_SIZE = new MFloat(10);
-		public final static MFloat MAX_VALUE = new MFloat(100);
-		public final static MFloat MIN_VALUE = new MFloat(-100);
+		public final static MDecimal STEP_SIZE = new MDecimal(10);
+		public final static MDecimal MAX_VALUE = new MDecimal(100);
+		public final static MDecimal MIN_VALUE = new MDecimal(-100);
 	}
 	
 	/**

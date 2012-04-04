@@ -91,7 +91,7 @@
 //	            public void handle(Request request, Response response) {
 //
 //					try {
-//	        			float value = Float.parseFloat(request.getAttributes().get("desiredValue").toString());
+//	        			double value = Float.parseFloat(request.getAttributes().get("desiredValue").toString());
 //	        			controller.rampTo(new MFloat(value));
 //	        			response.setEntity("Ramping motor speed to " + value + "%", MediaType.TEXT_PLAIN);
 //	        		} catch (NumberFormatException e) {

@@ -15,7 +15,7 @@
  */
 package mise.marssa.services.control;
 
-import mise.marssa.footprint.datatypes.decimal.MFloat;
+import mise.marssa.footprint.datatypes.decimal.MDecimal;
 import mise.marssa.footprint.datatypes.integer.MInteger;
 import mise.marssa.footprint.exceptions.ConfigurationError;
 import mise.marssa.footprint.exceptions.NoConnection;
@@ -25,11 +25,11 @@ import mise.marssa.footprint.interfaces.control.IRamping;
 
 /**
  * @author Clayton Tabone
- *
+ * 
  */
 public class Ramping implements IRamping {
 	int stepDelay;
-	float currentValue, stepSize;
+	double currentValue, stepSize;
 	private IController controller;
 	private RampingType rampType;
 	// true means positive ramping
@@ -39,64 +39,68 @@ public class Ramping implements IRamping {
 	private RampingTask rampingTask = null;
 
 	private class RampingTask implements Runnable {
-		MFloat desiredValue;
+		MDecimal desiredValue;
 
-		public RampingTask(MFloat desiredValue) {
+		public RampingTask(MDecimal desiredValue) {
 			this.desiredValue = desiredValue;
 		}
 
 		// TODO These exceptions have to be properly handled
 		public void run() {
 			try {
-				float difference = desiredValue.getValue() - currentValue;
+				double difference = desiredValue.doubleValue() - currentValue;
 
 				direction = (difference > 0);
-				while(true) {
+				while (true) {
 
-					if(difference == 0) {
-						// Do nothing. The desired value is the same as the current value.
-					} else if(direction) {
-						if(currentValue == stepSize) {
+					if (difference == 0) {
+						// Do nothing. The desired value is the same as the
+						// current value.
+					} else if (direction) {
+						if (currentValue == stepSize) {
 							polarity = IController.Polarity.POSITIVE;
 							controller.setPolaritySignal(polarity);
 						}
 						currentValue += stepSize;
 					} else {
-						if(currentValue == -stepSize) {
+						if (currentValue == -stepSize) {
 							polarity = IController.Polarity.NEGATIVE;
 							controller.setPolaritySignal(polarity);
-						 }
+						}
 						currentValue -= stepSize;
 					}
 					/**
-					 * @author the ramping type Accelerated accelerates the ramping when decreasing the speed in both directions
-					 *
+					 * @author the ramping type Accelerated accelerates the
+					 *         ramping when decreasing the speed in both
+					 *         directions
+					 * 
 					 */
 					if (rampType == RampingType.ACCELERATED) {
 
-						if(polarity  == IController.Polarity.POSITIVE && !direction) {
-							if (desiredValue.getValue() > 0)
-								currentValue = desiredValue.getValue();
-							else if (desiredValue.getValue() <0)
-								currentValue = -1;				
+						if (polarity == IController.Polarity.POSITIVE
+								&& !direction) {
+							if (desiredValue.doubleValue() > 0)
+								currentValue = desiredValue.doubleValue();
+							else if (desiredValue.doubleValue() < 0)
+								currentValue = -1;
 							else
-							currentValue=0;
-						}
-						else if(polarity  == IController.Polarity.NEGATIVE && direction) {
-							if (desiredValue.getValue() > 0)
+								currentValue = 0;
+						} else if (polarity == IController.Polarity.NEGATIVE
+								&& direction) {
+							if (desiredValue.doubleValue() > 0)
 								currentValue = 1;
-							else if (desiredValue.getValue() <0)
-								currentValue = desiredValue.getValue(); 
+							else if (desiredValue.doubleValue() < 0)
+								currentValue = desiredValue.doubleValue();
 							else
-								currentValue=0;
+								currentValue = 0;
 						}
-		            }
-					controller.outputValue(new MFloat(currentValue));
-					if((currentValue == desiredValue.getValue())) {
-		            	break;
-		            }
-		            Thread.sleep(stepDelay);
-		        }
+					}
+					controller.outputValue(new MDecimal(currentValue));
+					if ((currentValue == desiredValue.doubleValue())) {
+						break;
+					}
+					Thread.sleep(stepDelay);
+				}
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -112,43 +116,45 @@ public class Ramping implements IRamping {
 			}
 		}
 	}
+
 	/**
 	 * The rampingType Enum is used to select the type of ramping
-	 *
+	 * 
 	 */
-	public enum RampingType{
-		DEFAULT(0),
-		ACCELERATED(1);
+	public enum RampingType {
+		DEFAULT(0), ACCELERATED(1);
 
-		private RampingType(int rampingType) { }
+		private RampingType(int rampingType) {
+		}
 	};
 
-	public Ramping(MInteger stepDelay, MFloat stepSize, IController controller, RampingType rampType) throws ConfigurationError, OutOfRange, NoConnection {
+	public Ramping(MInteger stepDelay, MDecimal stepSize,
+			IController controller, RampingType rampType)
+			throws ConfigurationError, OutOfRange, NoConnection {
 		this.stepDelay = stepDelay.getValue();
-		this.stepSize = stepSize.getValue();
+		this.stepSize = stepSize.doubleValue();
 		this.controller = controller;
 		this.currentValue = 0;
-		this.rampType  = rampType;
-		controller.outputValue(new MFloat(this.currentValue));
+		this.rampType = rampType;
+		controller.outputValue(new MDecimal(this.currentValue));
 	}
 
-	public Ramping(MInteger stepDelay, MFloat stepSize, IController controller, MFloat initialValue, RampingType rampType) throws ConfigurationError, OutOfRange, NoConnection {
+	public Ramping(MInteger stepDelay, MDecimal stepSize,
+			IController controller, MDecimal initialValue, RampingType rampType)
+			throws ConfigurationError, OutOfRange, NoConnection {
 		this.stepDelay = stepDelay.getValue();
-		this.stepSize = stepSize.getValue();
+		this.stepSize = stepSize.doubleValue();
 		this.controller = controller;
-		this.currentValue = initialValue.getValue();
-		this.rampType  = rampType;
-		controller.outputValue(new MFloat(this.currentValue));
+		this.currentValue = initialValue.doubleValue();
+		this.rampType = rampType;
+		controller.outputValue(new MDecimal(this.currentValue));
 	}
 
-	/* (non-Javadoc)
-	 * @see mise.marssa.interfaces.electrical_motor_control.IRamping#rampTo(mise.marssa.data_types.float_datatypes.MFloat)
-	 */
-	public void rampTo(MFloat desiredValue) throws InterruptedException {
+	public void rampTo(MDecimal desiredValue) throws InterruptedException {
 		// Check if the ramping task exists
-		if(this.rampingTask != null) {
+		if (this.rampingTask != null) {
 			// Check if the ramping thread is running
-			if(this.rampingThread.isAlive()) {
+			if (this.rampingThread.isAlive()) {
 				// If the ramping thread is running, interrupt it
 				this.rampingThread.interrupt();
 				// After interrupting the thread, wait for it to terminate
@@ -162,21 +168,17 @@ public class Ramping implements IRamping {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see mise.marssa.interfaces.electrical_motor_control.IRamping#increase(mise.marssa.data_types.float_datatypes.MFloat)
-	 */
-	public void increase(MFloat incrementValue) throws InterruptedException, ConfigurationError, OutOfRange, NoConnection {
-		rampTo(new MFloat(currentValue + incrementValue.getValue()));
+	public void increase(MDecimal incrementValue) throws InterruptedException,
+			ConfigurationError, OutOfRange, NoConnection {
+		rampTo((MDecimal)incrementValue.add(new MDecimal(currentValue)));
 	}
 
-	/* (non-Javadoc)
-	 * @see mise.marssa.interfaces.electrical_motor_control.IRamping#decrease(mise.marssa.data_types.float_datatypes.MFloat)
-	 */
-	public void decrease(MFloat decrementValue) throws InterruptedException, ConfigurationError, OutOfRange, NoConnection {
-		rampTo(new MFloat(currentValue - decrementValue.getValue()));
+	public void decrease(MDecimal decrementValue) throws InterruptedException,
+			ConfigurationError, OutOfRange, NoConnection {
+		rampTo((MDecimal)decrementValue.subtract(new MDecimal(currentValue)));
 	}
 
-	public MFloat getCurrentValue() {
-		return new MFloat(currentValue);
+	public MDecimal getCurrentValue() {
+		return new MDecimal(currentValue);
 	}
 }
