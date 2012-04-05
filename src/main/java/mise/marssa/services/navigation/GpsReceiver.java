@@ -1,5 +1,17 @@
 /**
- * 
+ * Copyright 2012 MARSEC-XL Foundation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package mise.marssa.services.navigation;
 
@@ -12,7 +24,7 @@ import mise.marssa.footprint.datatypes.composite.Coordinate;
 import mise.marssa.footprint.datatypes.composite.Latitude;
 import mise.marssa.footprint.datatypes.composite.Longitude;
 import mise.marssa.footprint.datatypes.decimal.DegreesFloat;
-import mise.marssa.footprint.datatypes.decimal.MFloat;
+import mise.marssa.footprint.datatypes.decimal.MDecimal;
 import mise.marssa.footprint.datatypes.decimal.speed.Knots;
 import mise.marssa.footprint.datatypes.integer.DegreesInteger;
 import mise.marssa.footprint.datatypes.integer.MInteger;
@@ -24,10 +36,12 @@ import mise.marssa.footprint.interfaces.navigation.IGpsReceiver;
 import mise.marssa.footprint.logger.MMarker;
 import mise.marssa.services.constants.ServicesConstants;
 
+import org.json.JSONException;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Logger;
 import de.taimos.gpsd4java.backend.GPSdEndpoint;
+import de.taimos.gpsd4java.backend.ResultParser;
 import de.taimos.gpsd4java.types.ParseException;
 import de.taimos.gpsd4java.types.TPVObject;
 
@@ -50,10 +64,10 @@ public class GpsReceiver implements IGpsReceiver {
 				host.toString(), port.getValue());
 		this.host = host;
 		this.port = port;
-	//	logger.error(MMarker.EXCEPTION, "IOException", new IOException());
-		ep = new GPSdEndpoint(host.getContents(), port.getValue());
-		ep.start();
 		try {
+			ep = new GPSdEndpoint(host.getContents(), port.getValue(),
+					new ResultParser());
+			ep.start();
 			logger.info("GPSD version {} . started", ep.version());
 			logger.info("Enable watch mode for GPSD {} .", ep.watch(true, true));
 		} catch (IOException e) {
@@ -61,6 +75,9 @@ public class GpsReceiver implements IGpsReceiver {
 			throw new NoConnection(e.getMessage(), e.getCause());
 		} catch (ParseException e) {
 			logger.error(MMarker.EXCEPTION, "ParseException", e);
+			throw new NoValue(e.getMessage(), e.getCause());
+		} catch (JSONException e) {
+			logger.error(MMarker.EXCEPTION, "JSONException", e);
 			throw new NoValue(e.getMessage(), e.getCause());
 		}
 		logger.debug("Connected with a GPS with host: {} and port: {}",
@@ -89,7 +106,7 @@ public class GpsReceiver implements IGpsReceiver {
 				host.toString(), port.getValue());
 		for (int i = 0; i <= ServicesConstants.GENERAL.RETRY_AMOUNT.getValue(); i++) {
 			try {
-				float cog = (float) ep.poll().getFixes().get(0).getCourse();
+				double cog = ep.poll().getFixes().get(0).getCourse();
 				logger.trace(MMarker.GETTER, "Returning COG {} .", cog);
 				return new DegreesFloat(cog);
 			} catch (IOException e) {
@@ -148,9 +165,9 @@ public class GpsReceiver implements IGpsReceiver {
 				}
 				TPVObject tpv = tpvList.get(0);
 				Latitude latitude = new Latitude(new DegreesFloat(
-						(float) tpv.getLatitude()));
+						tpv.getLatitude()));
 				Longitude longitude = new Longitude(new DegreesFloat(
-						(float) tpv.getLongitude()));
+						tpv.getLongitude()));
 				logger.trace(MMarker.GETTER, "Returning Coordinate: {} .",
 						new Coordinate(latitude, longitude).toString());
 				return new Coordinate(latitude, longitude);
@@ -248,11 +265,11 @@ public class GpsReceiver implements IGpsReceiver {
 				host.toString(), port.getValue());
 		for (int i = 0; i <= ServicesConstants.GENERAL.RETRY_AMOUNT.getValue(); i++) {
 			try {
-				double altitude = ep.poll().getFixes().get(0).getAltitude();
+				DegreesFloat altitude = new DegreesFloat(ep.poll().getFixes()
+						.get(0).getAltitude());
 				logger.trace(MMarker.GETTER, "Returning Elevation: {} .",
-						new DegreesFloat((float) altitude).getValue());
-				// System.out.println("This altitude is " + altitude);
-				return new DegreesFloat((float) altitude);
+						altitude);
+				return altitude;
 			} catch (IOException e) {
 				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
 					Object[] hoPo = { host.getContents(), port.getValue(),
@@ -270,7 +287,7 @@ public class GpsReceiver implements IGpsReceiver {
 					NoValue nc = new NoValue(
 							"The Altitude is not available from the GPSReceiver."
 									+ e.getMessage(), e.getCause());
-					logger.debug(MMarker.EXCEPTION, "NoValue",e);
+					logger.debug(MMarker.EXCEPTION, "NoValue", e);
 					Object[] hoPo = { host.getContents(), port.getValue(),
 							e.getMessage(), e.getCause() };
 					logger.error(
@@ -288,7 +305,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * 
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getHDOP()
 	 */
-	public MFloat getHDOP() {
+	public MDecimal getHDOP() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -310,7 +327,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * 
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getPDOP()
 	 */
-	public MFloat getPDOP() {
+	public MDecimal getPDOP() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -357,7 +374,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getSignalSrength
 	 * ()
 	 */
-	public MFloat getSignalSrength() {
+	public MDecimal getSignalSrength() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -367,7 +384,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * 
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getSNR()
 	 */
-	public MFloat getSNR() {
+	public MDecimal getSNR() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -385,8 +402,8 @@ public class GpsReceiver implements IGpsReceiver {
 			try {
 				double speed = ep.poll().getFixes().get(0).getSpeed();
 				logger.trace(MMarker.GETTER, "Returning SOG: {} .", new Knots(
-						(float) speed).getValue());
-				return new Knots((float) speed);
+						speed));
+				return new Knots(speed);
 
 			} catch (IOException e) {
 				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
@@ -449,12 +466,12 @@ public class GpsReceiver implements IGpsReceiver {
 	 * 
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getVDOP()
 	 */
-	public MFloat getVDOP() {
+	public MDecimal getVDOP() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public MFloat getEPT() throws NoConnection, NoValue, OutOfRange {
+	public MDecimal getEPT() throws NoConnection, NoValue, OutOfRange {
 		logger.info(
 				"Getting EPT from a GPSReceiver with Host: {} and Port: {}.",
 				host.toString(), port.getValue());
@@ -464,9 +481,9 @@ public class GpsReceiver implements IGpsReceiver {
 				// http://www.devhardware.com/c/a/Mobile-Devices/TomTom-GO-920T-GPS-Review/2/
 				double EPT = ep.poll().getFixes().get(0).getCourse();
 				logger.trace(MMarker.GETTER, "Returning EPT: {} .", new Knots(
-						(float) EPT).getValue());
+						EPT));
 				// System.out.println("This altitude is " + altitude);
-				return new Knots((float) EPT);
+				return new Knots(EPT);
 
 			} catch (IOException e) {
 				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
@@ -485,7 +502,7 @@ public class GpsReceiver implements IGpsReceiver {
 					NoValue nv = new NoValue(
 							"The Altitude is not available from the GPSReceiver."
 									+ e.getMessage(), e.getCause());
-					logger.debug(MMarker.EXCEPTION, "IOException",e);
+					logger.debug(MMarker.EXCEPTION, "IOException", e);
 					Object[] hoPo = { host.getContents(), port.getValue(),
 							e.getMessage(), e.getCause() };
 					logger.error(

@@ -1,9 +1,24 @@
+/**
+ * Copyright 2012 MARSEC-XL Foundation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package mise.marssa.services.constants;
 
 import java.io.File;
 
 import mise.marssa.footprint.datatypes.MString;
-import mise.marssa.footprint.datatypes.decimal.MFloat;
+import mise.marssa.footprint.datatypes.decimal.MDecimal;
 import mise.marssa.footprint.datatypes.integer.MInteger;
 
 /**
@@ -53,9 +68,9 @@ public class ServicesTestConstants {
 	 * @author Clayton Tabone
 	 */
 	public final static class MOTOR {
-		public final static MFloat STEP_SIZE = new MFloat(10);
-		public final static MFloat MAX_VALUE = new MFloat(100);
-		public final static MFloat MIN_VALUE = new MFloat(-100);
+		public final static MDecimal STEP_SIZE = new MDecimal(10);
+		public final static MDecimal MAX_VALUE = new MDecimal(100);
+		public final static MDecimal MIN_VALUE = new MDecimal(-100);
 	}
 	
 	/**
