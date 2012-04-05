@@ -1,5 +1,0 @@
-The services repo contains the Domain-Specific MARSSA services.
-
-Dependencies
-The services Project has the following dependencies:
-https://github.com/marssa/libraries
