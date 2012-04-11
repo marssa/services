@@ -25,6 +25,7 @@ import mise.marssa.footprint.datatypes.composite.Latitude;
 import mise.marssa.footprint.datatypes.composite.Longitude;
 import mise.marssa.footprint.datatypes.decimal.DegreesFloat;
 import mise.marssa.footprint.datatypes.decimal.MDecimal;
+import mise.marssa.footprint.datatypes.decimal.distance.Metres;
 import mise.marssa.footprint.datatypes.decimal.speed.Knots;
 import mise.marssa.footprint.datatypes.integer.DegreesInteger;
 import mise.marssa.footprint.datatypes.integer.MInteger;
@@ -259,13 +260,13 @@ public class GpsReceiver implements IGpsReceiver {
 	 * @see
 	 * mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getElevation()
 	 */
-	public DegreesFloat getElevation() throws NoConnection, NoValue {
+	public Metres getAltitude() throws NoConnection, NoValue, OutOfRange {
 		logger.trace(
-				"Getting Elevation from GPSReceiver with Host: {} and Port: {}.",
+				"Getting Altitude from GPSReceiver with Host: {} and Port: {}.",
 				host.toString(), port.getValue());
 		for (int i = 0; i <= ServicesConstants.GENERAL.RETRY_AMOUNT.getValue(); i++) {
 			try {
-				DegreesFloat altitude = new DegreesFloat(ep.poll().getFixes()
+				Metres altitude = new Metres(ep.poll().getFixes()
 						.get(0).getAltitude());
 				logger.trace(MMarker.GETTER, "Returning Elevation: {} .",
 						altitude);
@@ -295,6 +296,9 @@ public class GpsReceiver implements IGpsReceiver {
 							hoPo);
 					throw nc;
 				}
+			} catch (OutOfRange e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		return null;
