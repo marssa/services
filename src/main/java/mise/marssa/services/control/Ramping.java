@@ -28,7 +28,7 @@ import mise.marssa.footprint.interfaces.control.IRamping;
  * 
  */
 public class Ramping implements IRamping {
-	int stepDelay;
+	long stepDelay;
 	double currentValue, stepSize;
 	private IController controller;
 	private RampingType rampType;
@@ -131,7 +131,7 @@ public class Ramping implements IRamping {
 	public Ramping(MInteger stepDelay, MDecimal stepSize,
 			IController controller, RampingType rampType)
 			throws ConfigurationError, OutOfRange, NoConnection {
-		this.stepDelay = stepDelay.getValue();
+		this.stepDelay = stepDelay.longValue();
 		this.stepSize = stepSize.doubleValue();
 		this.controller = controller;
 		this.currentValue = 0;
@@ -142,7 +142,7 @@ public class Ramping implements IRamping {
 	public Ramping(MInteger stepDelay, MDecimal stepSize,
 			IController controller, MDecimal initialValue, RampingType rampType)
 			throws ConfigurationError, OutOfRange, NoConnection {
-		this.stepDelay = stepDelay.getValue();
+		this.stepDelay = stepDelay.longValue();
 		this.stepSize = stepSize.doubleValue();
 		this.controller = controller;
 		this.currentValue = initialValue.doubleValue();

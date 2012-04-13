@@ -177,7 +177,7 @@
 				</configuration>
 				<executions>
 					<execution>
-						<phase>process-resources</phase>
+						<phase>prepare-package</phase>
 						<goals>
 							<goal>format</goal>
 						</goals>
@@ -185,6 +185,7 @@
 				</executions>
 			</plugin>
 		</plugins>
+
 		<pluginManagement>
 			<plugins>
 				<!--This plugin's configuration is used to store Eclipse m2e settings 

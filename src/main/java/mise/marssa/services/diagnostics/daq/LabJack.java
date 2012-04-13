@@ -27,7 +27,6 @@ import mise.marssa.footprint.datatypes.MBoolean;
 import mise.marssa.footprint.datatypes.MString;
 import mise.marssa.footprint.datatypes.decimal.MDecimal;
 import mise.marssa.footprint.datatypes.integer.MInteger;
-import mise.marssa.footprint.datatypes.integer.MLong;
 import mise.marssa.footprint.exceptions.ConfigurationError;
 import mise.marssa.footprint.exceptions.NoConnection;
 import mise.marssa.footprint.exceptions.OutOfRange;
@@ -158,7 +157,7 @@ public class LabJack {
 
 		private TimerConfigMode timerConfigMode;
 		private MInteger timerConfigModeAddress;
-		private MLong timerValue;
+		private MInteger timerValue;
 		private MInteger timerValueAddress;
 
 		private Timers(int timerNumber) {
@@ -192,26 +191,25 @@ public class LabJack {
 		private MInteger getTimerConfigModeAddress() {
 			labjackLogger.debug(MMarker.GETTER,
 					"Returning TimerConfigModeAddress {} .",
-					timerConfigModeAddress.getValue());
+					timerConfigModeAddress.longValue());
 			return this.timerConfigModeAddress;
 		}
 
-		private MLong getTimerValue() {
+		private MInteger getTimerValue() {
 			labjackLogger.debug(MMarker.GETTER, "Returning TimerValue {} .",
-					timerValue.getValue());
+					timerValue);
 			return this.timerValue;
 		}
 
-		private void setTimerValue(MLong timerValue) {
+		private void setTimerValue(MInteger timerValue) {
 			labjackLogger.debug(MMarker.SETTER, "Setting TimerValue {} .",
-					timerValue.getValue());
+					timerValue);
 			this.timerValue = timerValue;
 		}
 
 		private MInteger getTimerValueAddress() {
 			labjackLogger.debug(MMarker.GETTER,
-					"Returning TimerValueAddress {} .",
-					timerValueAddress.getValue());
+					"Returning TimerValueAddress {} .", timerValueAddress);
 			return this.timerValueAddress;
 		}
 	};
@@ -277,7 +275,7 @@ public class LabJack {
 			this.host = host;
 			this.port = port;
 			this.lj = lj;
-			Object[] labjackConnection = { host.toString(), port.getValue(), lj };
+			Object[] labjackConnection = { host, port, lj };
 			labjackConnectionLogger
 					.info("Connecting to a Labjack having host {} . port {} . and enabling {} . Labjack",
 							labjackConnection);
@@ -287,7 +285,7 @@ public class LabJack {
 			labjackConnectionLogger.debug(MMarker.GETTER,
 					"Returning if labjack is already in use");
 			return (this.host.getContents().equals(host) && this.port
-					.getValue() == port.getValue());
+					.equals(port));
 		}
 	}
 
@@ -350,7 +348,7 @@ public class LabJack {
 	// The base clock of the timers
 	private TimerBaseClock timerBaseClock;
 
-	private MLong timerClockDivisor;
+	private MInteger timerClockDivisor;
 
 	// host and port variables
 	private MString host;
@@ -358,8 +356,7 @@ public class LabJack {
 
 	private LabJack(MString host, MInteger port) throws UnknownHostException,
 			NoConnection {
-		Object[] labjackInformation = { host.toString(), port.getValue(),
-				numTimers };
+		Object[] labjackInformation = { host, port, numTimers };
 		labjackLogger
 				.info("Connecting to a Labjack having host {} . port {} . and enabling {} . timers",
 						labjackInformation);
@@ -369,11 +366,11 @@ public class LabJack {
 																				// address
 			labjackLogger.info(MMarker.SETTER, "Setting the readConnection");
 			readConnection = new TCPMasterConnection(address);
-			readConnection.setPort(port.getValue());
+			readConnection.setPort(port.intValue());
 			readConnection.connect();
 			labjackLogger.info(MMarker.SETTER, "Setting the writeConnection");
 			writeConnection = new TCPMasterConnection(address);
-			writeConnection.setPort(port.getValue());
+			writeConnection.setPort(port.intValue());
 			writeConnection.connect();
 			this.host = host;
 			this.port = port;
@@ -506,8 +503,8 @@ public class LabJack {
 				timer, timerConfigMode);
 		timer.setTimerConfigMode(timerConfigMode);
 		labjackLogger.debug("Calling the writeMultiple method");
-		writeMultiple(timer.timerConfigModeAddress,
-				new MLong(timerConfigMode.ordinal()));
+		writeMultiple(timer.timerConfigModeAddress, new MInteger(
+				timerConfigMode.ordinal()));
 	}
 
 	/**
@@ -526,8 +523,8 @@ public class LabJack {
 		labjackLogger.info(MMarker.SETTER, "Setting TimerBasedClock");
 		this.timerBaseClock = timerBaseClock;
 		labjackLogger.debug("Calling the writeMultiple method");
-		writeMultiple(LabJack.TIMER_BASE_CLOCK_ADDR,
-				new MLong(timerBaseClock.ordinal()));
+		writeMultiple(LabJack.TIMER_BASE_CLOCK_ADDR, new MInteger(
+				timerBaseClock.ordinal()));
 	}
 
 	/**
@@ -544,7 +541,7 @@ public class LabJack {
 	 * @throws OutOfRange
 	 * @see mise.marssa.services.diagnostics.daq.LabJack.TimersEnabled
 	 */
-	public void setTimerValue(Timers timer, MLong timerValue)
+	public void setTimerValue(Timers timer, MInteger timerValue)
 			throws NoConnection, OutOfRange, ConfigurationError {
 		labjackLogger.info(MMarker.SETTER, "Setting timerValue");
 		if ((timer.ordinal() + 1) > numTimers.ordinal()) {
@@ -553,7 +550,7 @@ public class LabJack {
 			// throw new ConfigurationError("Timer " + timer.ordinal() +
 			// " is not enabled");
 		}
-		if (timerValue.getValue() >= Math.pow(2, 32)) {
+		if (timerValue.doubleValue() >= Math.pow(2, 32)) {
 			labjackLogger
 					.error("TimerValue must be a value between 0 and 4294967294 (2^32 - 1)",
 							new OutOfRange());
@@ -580,13 +577,12 @@ public class LabJack {
 	 * @see mise.marssa.services.diagnostics.daq.LabJack.TimerBaseClock
 	 * @see mise.marssa.control.LabJack.TIMER_CLOCK_DIVISOR_ADDR
 	 */
-	public void setTimerClockDivisor(MLong timerClockDivisor)
+	public void setTimerClockDivisor(MInteger timerClockDivisor)
 			throws OutOfRange, NoConnection {
 		labjackLogger.info(MMarker.SETTER,
-				"Setting timerClockDivisor with value {} .",
-				timerClockDivisor.getValue());
-		if (timerClockDivisor.getValue() < 1
-				|| timerClockDivisor.getValue() > 256) {
+				"Setting timerClockDivisor with value {} .", timerClockDivisor);
+		if (timerClockDivisor.intValue() < 1
+				|| timerClockDivisor.intValue() > 256) {
 			labjackLogger.error(
 					"TimerClockDivisor must be a value between 1 and 256",
 					new OutOfRange());
@@ -595,8 +591,7 @@ public class LabJack {
 		}
 		this.timerClockDivisor = timerClockDivisor;
 		labjackLogger.debug("Calling the writeMultiple method");
-		writeMultiple(LabJack.TIMER_BASE_CLOCK_ADDR, new MLong(
-				timerClockDivisor.getValue()));
+		writeMultiple(LabJack.TIMER_BASE_CLOCK_ADDR, timerClockDivisor);
 	}
 
 	/**
@@ -609,9 +604,9 @@ public class LabJack {
 		labjackLogger.info(
 				"Writing to register {} . with a registerValue {} .",
 				registerNumber, registerValue);
-		SimpleRegister register = new SimpleRegister(registerValue.getValue());
+		SimpleRegister register = new SimpleRegister(registerValue.intValue());
 		WriteSingleRegisterRequest writeRequest = new WriteSingleRegisterRequest(
-				registerNumber.getValue(), register);
+				registerNumber.intValue(), register);
 
 		// Prepare the transaction
 		labjackLogger.info("Preparing the Transaction");
@@ -631,7 +626,7 @@ public class LabJack {
 					.error("ModbusIOException- Cannot write to labjack register number {} .",
 							registerNumber);
 			throw new NoConnection("Cannot write to LabJack FIO port"
-					+ (registerNumber.getValue() - 6000) + "\n"
+					+ (registerNumber.subtract(new MInteger(6000))) + "\n"
 					+ e.getMessage(), e.getCause());
 		} catch (ModbusSlaveException e) {
 			labjackLogger
@@ -639,14 +634,14 @@ public class LabJack {
 							registerNumber);
 			throw new NoConnection(
 					"ModBus Slave exception cannot write to register"
-							+ (registerNumber.getValue() - 6000) + "\n"
-							+ e.getMessage(), e.getCause());
+							+ (registerNumber.subtract(new MInteger(6000)))
+							+ "\n" + e.getMessage(), e.getCause());
 		} catch (ModbusException e) {
 			labjackLogger
 					.error("ModbusException Cannot write to labjack register number {} .",
 							registerNumber);
 			throw new NoConnection("ModBus exception cannot write to register"
-					+ (registerNumber.getValue() - 6000) + "\n"
+					+ (registerNumber.subtract(new MInteger(6000))) + "\n"
 					+ e.getMessage(), e.getCause());
 		}
 	}
@@ -664,7 +659,7 @@ public class LabJack {
 		write(registerNumber, new MInteger(highLow));
 	}
 
-	public void writeMultiple(MInteger registerNumber, MLong registerValue)
+	public void writeMultiple(MInteger registerNumber, MInteger registerValue)
 			throws NoConnection {
 
 		labjackLogger.info(
@@ -672,14 +667,15 @@ public class LabJack {
 				registerNumber, registerValue);
 		labjackLogger
 				.debug("Dividing the 16bit registeer to two 8bit registers");
-		SimpleRegister registerLSB = new SimpleRegister(
-				(int) (registerValue.getValue() & 0xFFFF));
+		SimpleRegister registerLSB = new SimpleRegister(registerValue.and(
+				new MInteger(0xFFFF)).intValue());
 		SimpleRegister registerMSB = new SimpleRegister(
-				(int) ((registerValue.getValue() & 0xFFFF0000) >> 16));
+				(registerValue.and(new MInteger(0xFFFF0000))).shiftLeft(16)
+						.intValue());
 		SimpleRegister[] registerArray = { registerLSB, registerMSB };
 
 		WriteMultipleRegistersRequest writeRequest = new WriteMultipleRegistersRequest(
-				registerNumber.getValue(), registerArray);
+				registerNumber.intValue(), registerArray);
 
 		// Prepare the transaction
 		labjackLogger.info("Preparing the Transaction");
@@ -701,7 +697,7 @@ public class LabJack {
 					.error("ModbusIOException- Cannot write to labjack register number {} .",
 							registerNumber);
 			throw new NoConnection("Cannot write to LabJack FIO port"
-					+ (registerNumber.getValue() - 6000) + "\n"
+					+ registerNumber.subtract(new MInteger(6000)) + "\n"
 					+ e.getMessage(), e.getCause());
 		} catch (ModbusSlaveException e) {
 			labjackLogger
@@ -709,14 +705,14 @@ public class LabJack {
 							registerNumber);
 			throw new NoConnection(
 					"ModBus Slave exception cannot write to register"
-							+ (registerNumber.getValue() - 6000) + "\n"
-							+ e.getMessage(), e.getCause());
+							+ registerNumber.subtract(new MInteger(6000))
+							+ "\n" + e.getMessage(), e.getCause());
 		} catch (ModbusException e) {
 			labjackLogger
 					.error("ModbusException Cannot write to labjack register number {} .",
 							registerNumber);
 			throw new NoConnection("ModBus exception cannot write to register"
-					+ (registerNumber.getValue() - 6000) + "\n"
+					+ (registerNumber.subtract(new MInteger(6000))) + "\n"
 					+ e.getMessage(), e.getCause());
 		}
 	}
@@ -733,7 +729,7 @@ public class LabJack {
 		ModbusTCPTransaction transaction = new ModbusTCPTransaction(
 				readConnection);
 		ReadMultipleRegistersRequest req = new ReadMultipleRegistersRequest(
-				ref.getValue(), count.getValue());
+				ref.intValue(), count.intValue());
 		ReadMultipleRegistersResponse res = null;
 		transaction = new ModbusTCPTransaction(readConnection);
 
@@ -767,8 +763,9 @@ public class LabJack {
 
 		res = (ReadMultipleRegistersResponse) transaction.getResponse();
 		labjackLogger.debug("Setting registers value for the AIN");
-		int reg1 = AIN.getValue() * 2;
-		int reg2 = (AIN.getValue() * 2) + 1;
+		int reg1 = AIN.multiply(new MInteger(2)).intValue();
+		int reg2 = (AIN.multiply(new MInteger(2))).add(new MInteger(1))
+				.intValue();
 		labjackLogger
 				.debug("First 8bit register is set to LSB, Second 8bit register set to MSB");
 		byte[] lsb = res.getRegister(reg1).toBytes();

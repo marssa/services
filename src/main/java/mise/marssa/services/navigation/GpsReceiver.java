@@ -62,11 +62,11 @@ public class GpsReceiver implements IGpsReceiver {
 			NoConnection {
 		logger.info(
 				"Trying to connect with a GPS through GPSD with host: {}  and port: {} .",
-				host.toString(), port.getValue());
+				host, port);
 		this.host = host;
 		this.port = port;
 		try {
-			ep = new GPSdEndpoint(host.getContents(), port.getValue(),
+			ep = new GPSdEndpoint(host.getContents(), port.intValue(),
 					new ResultParser());
 			ep.start();
 			logger.info("GPSD version {} . started", ep.version());
@@ -81,8 +81,8 @@ public class GpsReceiver implements IGpsReceiver {
 			logger.error(MMarker.EXCEPTION, "JSONException", e);
 			throw new NoValue(e.getMessage(), e.getCause());
 		}
-		logger.debug("Connected with a GPS with host: {} and port: {}",
-				host.toString(), port.getValue());
+		logger.debug("Connected with a GPS with host: {} and port: {}", host,
+				port);
 	}
 
 	/*
@@ -104,16 +104,15 @@ public class GpsReceiver implements IGpsReceiver {
 	public DegreesFloat getCOG() throws NoConnection, NoValue {
 		logger.trace(
 				"Getting COG from GPSReceiver with Host: {} and Port: {}.",
-				host.toString(), port.getValue());
-		for (int i = 0; i <= ServicesConstants.GENERAL.RETRY_AMOUNT.getValue(); i++) {
+				host, port);
+		for (int i = 0; i <= ServicesConstants.GENERAL.RETRY_AMOUNT.intValue(); i++) {
 			try {
 				double cog = ep.poll().getFixes().get(0).getCourse();
 				logger.trace(MMarker.GETTER, "Returning COG {} .", cog);
 				return new DegreesFloat(cog);
 			} catch (IOException e) {
-				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
-					Object[] hoPo = { host.getContents(), port.getValue(),
-							e.getMessage(), e.getCause() };
+				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.intValue()) {
+					Object[] hoPo = { host, port, e.getMessage(), e.getCause() };
 					// TODO should we let host and port in every class be global
 					// so that when another gps is instantiated
 					// we can refer to that particular GPS
@@ -126,9 +125,8 @@ public class GpsReceiver implements IGpsReceiver {
 					throw nc;
 				}
 			} catch (ParseException e) {
-				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
-					Object[] hoPo = { host.getContents(), port.getValue(),
-							e.getMessage(), e.getCause() };
+				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.intValue()) {
+					Object[] hoPo = { host, port, e.getMessage(), e.getCause() };
 					NoValue nv = new NoValue(
 							"The COG is not available from the GPSReceiver. This is the error message from the gpsd4java library:"
 									+ e.getMessage(), e.getCause());
@@ -155,8 +153,8 @@ public class GpsReceiver implements IGpsReceiver {
 	public Coordinate getCoordinate() throws NoConnection, NoValue, OutOfRange {
 		logger.trace(
 				"Getting Coordinate from GPSReceiver with Host: {} and Port: {}.",
-				host.toString(), port.getValue());
-		for (int i = 0; i <= ServicesConstants.GENERAL.RETRY_AMOUNT.getValue(); i++) {
+				host, port);
+		for (int i = 0; i <= ServicesConstants.GENERAL.RETRY_AMOUNT.intValue(); i++) {
 			try {
 				List<TPVObject> tpvList = ep.poll().getFixes();
 				if (tpvList.isEmpty()) {
@@ -173,9 +171,8 @@ public class GpsReceiver implements IGpsReceiver {
 						new Coordinate(latitude, longitude).toString());
 				return new Coordinate(latitude, longitude);
 			} catch (IOException e) {
-				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
-					Object[] hoPo = { host.getContents(), port.getValue(),
-							e.getMessage(), e.getCause() };
+				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.intValue()) {
+					Object[] hoPo = { host, port, e.getMessage(), e.getCause() };
 					NoConnection nc = new NoConnection(e.getMessage(),
 							e.getCause());
 					logger.debug(MMarker.EXCEPTION, "NoConnection", e);
@@ -185,9 +182,8 @@ public class GpsReceiver implements IGpsReceiver {
 					throw nc;
 				}
 			} catch (ParseException e) {
-				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
-					Object[] hoPo = { host.getContents(), port.getValue(),
-							e.getMessage(), e.getCause() };
+				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.intValue()) {
+					Object[] hoPo = { host, port, e.getMessage(), e.getCause() };
 					NoValue nv = new NoValue(e.getMessage(), e.getCause());
 					logger.debug(MMarker.EXCEPTION, "NoValue", e);
 					logger.error(
@@ -213,8 +209,8 @@ public class GpsReceiver implements IGpsReceiver {
 	public MDate getDate() throws NoConnection, NoValue {
 		logger.trace(
 				"Getting Date from GPSReceiver with Host: {} and Port: {}.",
-				host.toString(), port.getValue());
-		for (int i = 0; i <= ServicesConstants.GENERAL.RETRY_AMOUNT.getValue(); i++) {
+				host, port);
+		for (int i = 0; i <= ServicesConstants.GENERAL.RETRY_AMOUNT.intValue(); i++) {
 			try {
 				double timestamp = ep.poll().getFixes().get(0).getTimestamp();
 				System.out.println(timestamp);
@@ -222,9 +218,8 @@ public class GpsReceiver implements IGpsReceiver {
 						(long) timestamp).toString());
 				return new MDate((long) timestamp);
 			} catch (IOException e) {
-				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
-					Object[] hoPo = { host.getContents(), port.getValue(),
-							e.getMessage(), e.getCause() };
+				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.intValue()) {
+					Object[] hoPo = { host, port, e.getMessage(), e.getCause() };
 					NoConnection nc = new NoConnection(e.getMessage(),
 							e.getCause());
 					logger.debug(MMarker.EXCEPTION, "NoConnection", e);
@@ -234,13 +229,12 @@ public class GpsReceiver implements IGpsReceiver {
 					throw nc;
 				}
 			} catch (ParseException e) {
-				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
+				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.intValue()) {
 					NoValue nv = new NoValue(
 							"The Date is not available from the GPSReceiver. This is the error message from the gpsd4java library:"
 									+ e.getMessage(), e.getCause());
 					logger.debug(MMarker.EXCEPTION, "NoValue", e);
-					Object[] hoPo = { host.getContents(), port.getValue(),
-							e.getMessage(), e.getCause() };
+					Object[] hoPo = { host, port, e.getMessage(), e.getCause() };
 					logger.error(
 							"The Date is not availalbe from the GPSReceiver with host: {} and port: {}, The error message is {} and the cause is {} ..",
 							hoPo);
@@ -263,36 +257,34 @@ public class GpsReceiver implements IGpsReceiver {
 	public Metres getAltitude() throws NoConnection, NoValue, OutOfRange {
 		logger.trace(
 				"Getting Altitude from GPSReceiver with Host: {} and Port: {}.",
-				host.toString(), port.getValue());
-		for (int i = 0; i <= ServicesConstants.GENERAL.RETRY_AMOUNT.getValue(); i++) {
+				host, port);
+		for (int i = 0; i <= ServicesConstants.GENERAL.RETRY_AMOUNT.intValue(); i++) {
 			try {
-				Metres altitude = new Metres(ep.poll().getFixes()
-						.get(0).getAltitude());
+				Metres altitude = new Metres(ep.poll().getFixes().get(0)
+						.getAltitude());
 				logger.trace(MMarker.GETTER, "Returning Elevation: {} .",
 						altitude);
 				return altitude;
 			} catch (IOException e) {
-				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
-					Object[] hoPo = { host.getContents(), port.getValue(),
-							e.getMessage(), e.getCause() };
+				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.intValue()) {
+					Object[] hoPo = { host, port };
 					NoConnection nc = new NoConnection(e.getMessage(),
 							e.getCause());
 					logger.debug(MMarker.EXCEPTION, "NoConnection", e);
 					logger.error(
-							"Could not connect to the GPS with Host: {} and Port: {}. The error message is {} and the cause is {}",
+							"Could not connect to the GPS with Host: {} and Port: {}",
 							hoPo);
 					throw nc;
 				}
 			} catch (ParseException e) {
-				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
+				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.intValue()) {
 					NoValue nc = new NoValue(
 							"The Altitude is not available from the GPSReceiver."
 									+ e.getMessage(), e.getCause());
 					logger.debug(MMarker.EXCEPTION, "NoValue", e);
-					Object[] hoPo = { host.getContents(), port.getValue(),
-							e.getMessage(), e.getCause() };
+					Object[] hoPo = { host, port };
 					logger.error(
-							"The Altitude is not availalbe from the GPSReceiver with host: {} and port: {}, The error message is {} and the cause is {} ..",
+							"The Altitude is not availalbe from the GPSReceiver with host: {} and port: {}",
 							hoPo);
 					throw nc;
 				}
@@ -401,8 +393,8 @@ public class GpsReceiver implements IGpsReceiver {
 	public Knots getSOG() throws NoConnection, NoValue {
 		logger.info(
 				"Getting Speed Over Ground from a GPSReceiver with Host: {} and Port: {}.",
-				host.toString(), port.getValue());
-		for (int i = 0; i <= ServicesConstants.GENERAL.RETRY_AMOUNT.getValue(); i++) {
+				host, port);
+		for (int i = 0; i <= ServicesConstants.GENERAL.RETRY_AMOUNT.intValue(); i++) {
 			try {
 				double speed = ep.poll().getFixes().get(0).getSpeed();
 				logger.trace(MMarker.GETTER, "Returning SOG: {} .", new Knots(
@@ -410,27 +402,25 @@ public class GpsReceiver implements IGpsReceiver {
 				return new Knots(speed);
 
 			} catch (IOException e) {
-				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
-					Object[] hoPo = { host.getContents(), port.getValue(),
-							e.getMessage(), e.getCause() };
+				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.intValue()) {
+					Object[] hoPo = { host, port };
 					NoConnection nc = new NoConnection(e.getMessage(),
 							e.getCause());
 					logger.debug(MMarker.EXCEPTION, "NoConnection", e);
 					logger.error(
-							"Could not connect to the GPS with Host: {} and Port: {}. The error message is {} and the cause is {}",
+							"Could not connect to the GPS with Host: {} and Port: {}",
 							hoPo);
 					throw nc;
 				}
 			} catch (ParseException e) {
-				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
+				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.intValue()) {
 					NoValue nv = new NoValue(
 							"The Altitude is not available from the GPSReceiver."
 									+ e.getMessage(), e.getCause());
 					logger.debug(MMarker.EXCEPTION, "NoValue", e);
-					Object[] hoPo = { host.getContents(), port.getValue(),
-							e.getMessage(), e.getCause() };
+					Object[] hoPo = { host, port };
 					logger.error(
-							"The SOG is not availalbe from the GPSReceiver with host: {} and port: {}, The error message is {} and the cause is {} ..",
+							"The SOG is not availalbe from the GPSReceiver with host: {} and port: {}",
 							hoPo);
 					throw nv;
 				}
@@ -478,8 +468,8 @@ public class GpsReceiver implements IGpsReceiver {
 	public MDecimal getEPT() throws NoConnection, NoValue, OutOfRange {
 		logger.info(
 				"Getting EPT from a GPSReceiver with Host: {} and Port: {}.",
-				host.toString(), port.getValue());
-		for (int i = 1; i <= ServicesConstants.GENERAL.RETRY_AMOUNT.getValue(); i++) {
+				host, port);
+		for (int i = 1; i <= ServicesConstants.GENERAL.RETRY_AMOUNT.intValue(); i++) {
 			try {
 				// Suppose to be EPT, description of an EPT is
 				// http://www.devhardware.com/c/a/Mobile-Devices/TomTom-GO-920T-GPS-Review/2/
@@ -490,27 +480,25 @@ public class GpsReceiver implements IGpsReceiver {
 				return new Knots(EPT);
 
 			} catch (IOException e) {
-				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
+				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.intValue()) {
 					NoConnection nc = new NoConnection(e.getMessage(),
 							e.getCause());
-					Object[] hoPo = { host.getContents(), port.getValue(),
-							e.getMessage(), e.getCause() };
+					Object[] hoPo = { host, port };
 					logger.debug(MMarker.EXCEPTION, "NoConnection", e);
 					logger.error(
-							"Could not connect to the GPS with Host: {} and Port: {}. The error message is {} and the cause is {}",
+							"Could not connect to the GPS with Host: {} and Port: {}",
 							hoPo);
 					throw nc;
 				}
 			} catch (ParseException e) {
-				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.getValue()) {
+				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.intValue()) {
 					NoValue nv = new NoValue(
 							"The Altitude is not available from the GPSReceiver."
 									+ e.getMessage(), e.getCause());
 					logger.debug(MMarker.EXCEPTION, "IOException", e);
-					Object[] hoPo = { host.getContents(), port.getValue(),
-							e.getMessage(), e.getCause() };
+					Object[] hoPo = { host, port };
 					logger.error(
-							"The EPT is not availalbe from the GPSReceiver with host: {} and port: {}, The error message is {} and the cause is {} ..",
+							"The EPT is not availalbe from the GPSReceiver with host: {} and port: {}",
 							hoPo);
 					throw nv;
 				}
