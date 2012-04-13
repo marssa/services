@@ -16,7 +16,7 @@
 /**
  * 
  */
-package mise.marssa.services.scheduling;
+package mise.marssa.services.logging;
 
 import java.util.ArrayList;
 import java.util.List;
