@@ -20,18 +20,20 @@ package mise.marssa.services.logging;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimerTask;
+
+import mise.marssa.footprint.datatypes.MString;
+import mise.marssa.services.scheduling.MTimerTask;
 
 /**
  * @author Warren Zahra
  * 
  */
-public abstract class LoggingTask<QuantityType> extends TimerTask {
+public abstract class LoggingTask<QuantityType> extends MTimerTask {
 
 	private ArrayList<QuantityType> quantities = new ArrayList<QuantityType>();
-	private String taskName;
 
 	protected LoggingTask(List<QuantityType> quantities) {
+		super();
 		StringBuilder sb = new StringBuilder(quantities.getClass().toString());
 		sb.append("( ");
 		for (QuantityType q : quantities) {
@@ -39,15 +41,11 @@ public abstract class LoggingTask<QuantityType> extends TimerTask {
 			sb.append(' ');
 		}
 		sb.append(')');
-		taskName = sb.toString();
+		setTaskName(new MString(sb.toString()));
 
 		this.quantities.addAll(quantities);
 	}
 
-	public String getTaskName() {
-		return taskName;
-	}
-	
 	public ArrayList<QuantityType> getQuantities() {
 		return new ArrayList<QuantityType>(quantities);
 	}

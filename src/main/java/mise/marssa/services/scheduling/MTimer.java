@@ -21,9 +21,6 @@ package mise.marssa.services.scheduling;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Timer;
-import java.util.TimerTask;
-
-import mise.marssa.services.logging.LoggingTask;
 
 /**
  * @author Warren Zahra
@@ -32,7 +29,7 @@ import mise.marssa.services.logging.LoggingTask;
 public class MTimer {
 	private Timer marssaTimer;
 	private static MTimer mTimer;
-	private ArrayList<String> timerTasklist = new ArrayList<String>();;
+	private ArrayList<MTimerTask> timerTasklist = new ArrayList<MTimerTask>();;
 
 	private MTimer() {
 		marssaTimer = new Timer();
@@ -45,64 +42,67 @@ public class MTimer {
 		return mTimer;
 	}
 
-	public void addSchedule(String timerTaskName, LoggingTask task, Date time) {
+	public void addSchedule(MTimerTask task, Date time) {
 		if (marssaTimer == null)
 			marssaTimer = new Timer();
-		
+
 		marssaTimer.schedule(task, time);
-		timerTasklist.add(timerTaskName.toString());
+		timerTasklist.add(task);
 	}
 
-	public void addSchedule(String timerTaskName, LoggingTask task,
-			Date firstTime, long period) {
-		if (marssaTimer == null)
-			marssaTimer = new Timer();
-		marssaTimer.schedule(task, firstTime, period);
-		timerTasklist.add(timerTaskName.toString());
-	}
-
-	public void addSchedule(String timerTaskName, LoggingTask task, long delay) {
-		if (marssaTimer == null)
-			marssaTimer = new Timer();
-		marssaTimer.schedule(task, delay);
-		timerTasklist.add(timerTaskName.toString());
-	}
-
-	public void addSchedule(String timerTaskName, LoggingTask task, long delay,
+	public void addSchedule(MTimerTask task, Date firstTime,
 			long period) {
 		if (marssaTimer == null)
 			marssaTimer = new Timer();
-		marssaTimer.schedule(task, delay, period);
-		timerTasklist.add(timerTaskName.toString());
+		marssaTimer.schedule(task, firstTime, period);
+		timerTasklist.add(task);
 	}
 
-	public void addScheduleAtFixedRate(String timerTaskName, LoggingTask task,
+	public void addSchedule(MTimerTask task, long delay) {
+		if (marssaTimer == null)
+			marssaTimer = new Timer();
+		marssaTimer.schedule(task, delay);
+		timerTasklist.add(task);
+	}
+
+	public void addSchedule(MTimerTask task, long delay, long period) {
+		if (marssaTimer == null)
+			marssaTimer = new Timer();
+		marssaTimer.schedule(task, delay, period);
+		timerTasklist.add(task);
+	}
+
+	public void addScheduleAtFixedRate(MTimerTask task,
 			Date firstTime, long period) {
 		if (marssaTimer == null)
 			marssaTimer = new Timer();
 		marssaTimer.scheduleAtFixedRate(task, firstTime, period);
-		timerTasklist.add(timerTaskName.toString());
+		timerTasklist.add(task);
 	}
 
-	public void addScheduleAtFixedRate(String timerTaskName, LoggingTask task,
-			long delay, long period) {
+	public void addScheduleAtFixedRate(MTimerTask task, long delay,
+			long period) {
 		if (marssaTimer == null)
 			marssaTimer = new Timer();
 		marssaTimer.scheduleAtFixedRate(task, delay, period);
-		timerTasklist.add(timerTaskName.toString());
-	}
-	
-	public ArrayList list(){
-		return timerTasklist;
+		timerTasklist.add(task);
 	}
 
-	public void cancel(){
+	/**
+	 * Returns a copy of the timer task list
+	 * @return copy of timer task list
+	 */
+	public ArrayList<MTimerTask> list() {
+		return new ArrayList<MTimerTask>(timerTasklist);
+	}
+
+	public void cancel() {
 		marssaTimer.cancel();
 		marssaTimer = null;
 		timerTasklist.clear();
 	}
-	
-	public void cancelTask(String timerTaskName){
-			timerTasklist.remove(new String (timerTaskName.toString()));
+
+	public void cancelTask(String timerTaskName) {
+		timerTasklist.remove(new String(timerTaskName.toString()));
 	}
 }

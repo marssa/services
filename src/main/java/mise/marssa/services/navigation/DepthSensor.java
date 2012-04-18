@@ -19,6 +19,7 @@ import mise.marssa.footprint.datatypes.decimal.distance.ADistance;
 import mise.marssa.footprint.datatypes.decimal.distance.Metres;
 import mise.marssa.footprint.datatypes.decimal.temperature.ATemperature;
 import mise.marssa.footprint.datatypes.decimal.temperature.DegreesCelcius;
+import mise.marssa.footprint.datatypes.decimal.volume.AVolume;
 import mise.marssa.footprint.exceptions.OutOfRange;
 import mise.marssa.footprint.interfaces.navigation.IDepthSensor;
 import mise.marssa.footprint.logger.MMarker;
@@ -39,9 +40,11 @@ import ch.qos.logback.classic.Logger;
  * 
  */
 public class DepthSensor implements IDepthSensor, SentenceListener {
-	private static Logger DepthSensor = (Logger) LoggerFactory
-			.getLogger("DepthSensor");
-	SentenceReader reader;
+	private static final Logger logger = (Logger) LoggerFactory
+			.getLogger(DepthSensor.class.getName());
+
+	// TODO check if reader variable is really required
+	private SentenceReader reader;
 
 	Metres depthMeters = null;
 	DegreesCelcius temperatureDegrees = null;
@@ -52,19 +55,19 @@ public class DepthSensor implements IDepthSensor, SentenceListener {
 		reader.addSentenceListener(this, SentenceId.DBT);
 		reader.addSentenceListener(this, SentenceId.DPT);
 		String[] sentenceIDs = { "MTW", "DBT", "DPT" };
-		DepthSensor
-				.info("A depth sensor with the following Sentence id is instantiated",
-						sentenceIDs);
+		logger.info(
+				"A depth sensor with the following Sentence id is instantiated",
+				sentenceIDs);
 	}
 
 	public ADistance getDepthMeters() throws OutOfRange {
-		DepthSensor.trace(MMarker.GETTER, "Returning Depth in metres {} .",
+		logger.trace(MMarker.GETTER, "Returning Depth in metres {} .",
 				depthMeters);
 		return depthMeters;
 	}
 
 	public ATemperature getTemperatureDegrees() {
-		DepthSensor.trace(MMarker.GETTER,
+		logger.trace(MMarker.GETTER,
 				"Returning Temperature in degreesCelsius {} .",
 				temperatureDegrees);
 		return temperatureDegrees;
@@ -82,7 +85,7 @@ public class DepthSensor implements IDepthSensor, SentenceListener {
 	public void sentenceRead(SentenceEvent event) {
 
 		String sid = event.getSentence().getSentenceId().toString();
-		DepthSensor.debug("Sentence received is of Id type", sid);
+		logger.debug("Sentence received is of Id type", sid);
 		try {
 			if (sid.equals("MTW")) {
 				MTWSentence mtw = (MTWSentence) event.getSentence();
@@ -98,7 +101,7 @@ public class DepthSensor implements IDepthSensor, SentenceListener {
 
 			}
 		} catch (OutOfRange e) {
-			DepthSensor.debug("Value is out of range", new OutOfRange());
+			logger.debug("Value is out of range", new OutOfRange());
 			// TODO Auto-generated catch block
 			// e.printStackTrace();
 		}

@@ -28,18 +28,20 @@ import mise.marssa.footprint.interfaces.control.IRamping;
  * 
  */
 public class Ramping implements IRamping {
-	long stepDelay;
-	double currentValue, stepSize;
+	private long stepDelay;
+	private double currentValue, stepSize;
 	private IController controller;
 	private RampingType rampType;
-	// true means positive ramping
-	boolean direction = false;
+	/**
+	 * true means positive ramping
+	 */
+	private boolean direction = false;
 	private IController.Polarity polarity;
 	private Thread rampingThread;
 	private RampingTask rampingTask = null;
 
 	private class RampingTask implements Runnable {
-		MDecimal desiredValue;
+		private MDecimal desiredValue;
 
 		public RampingTask(MDecimal desiredValue) {
 			this.desiredValue = desiredValue;
@@ -170,12 +172,12 @@ public class Ramping implements IRamping {
 
 	public void increase(MDecimal incrementValue) throws InterruptedException,
 			ConfigurationError, OutOfRange, NoConnection {
-		rampTo((MDecimal)incrementValue.add(new MDecimal(currentValue)));
+		rampTo((MDecimal) incrementValue.add(new MDecimal(currentValue)));
 	}
 
 	public void decrease(MDecimal decrementValue) throws InterruptedException,
 			ConfigurationError, OutOfRange, NoConnection {
-		rampTo((MDecimal)decrementValue.subtract(new MDecimal(currentValue)));
+		rampTo((MDecimal) decrementValue.subtract(new MDecimal(currentValue)));
 	}
 
 	public MDecimal getCurrentValue() {
