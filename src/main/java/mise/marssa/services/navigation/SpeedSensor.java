@@ -15,7 +15,7 @@
  */
 package mise.marssa.services.navigation;
 
-import mise.marssa.footprint.datatypes.decimal.DegreesFloat;
+import mise.marssa.footprint.datatypes.decimal.DegreesDecimal;
 import mise.marssa.footprint.datatypes.decimal.distance.ADistance;
 import mise.marssa.footprint.datatypes.decimal.distance.Metres;
 import mise.marssa.footprint.datatypes.decimal.speed.ASpeed;
@@ -48,8 +48,8 @@ public class SpeedSensor implements ISpeedSensor, SentenceListener {
 	SentenceReader reader;
 	Knots speedKnots = null;
 	Metres depthMeters = null;
-	DegreesFloat degreesTrue = null;
-	DegreesFloat degreesMagnetic = null;
+	DegreesDecimal degreesTrue = null;
+	DegreesDecimal degreesMagnetic = null;
 	DegreesCelcius temperatureDegrees = null;
 	
 	public SpeedSensor(SentenceReader reader){
@@ -67,12 +67,12 @@ public class SpeedSensor implements ISpeedSensor, SentenceListener {
 		return speedKnots;
 	}
 		
-	public DegreesFloat getDegreesTrue() throws OutOfRange{
+	public DegreesDecimal getDegreesTrue() throws OutOfRange{
 		SpeedSensor.trace(MMarker.GETTER,"Returning Degrees in degreesTrue {} .", degreesTrue);
 		return degreesTrue;
 	}
 
-	public DegreesFloat getDegreesMagnetic() throws OutOfRange{
+	public DegreesDecimal getDegreesMagnetic() throws OutOfRange{
 		SpeedSensor.trace(MMarker.GETTER,"Returning Degrees in degreesMagnetic {} .", degreesMagnetic);
 		return degreesMagnetic;
 	}	
@@ -112,8 +112,8 @@ public class SpeedSensor implements ISpeedSensor, SentenceListener {
 	        }else if(sid.equals("VHW")) {
 	        	VHWSentence vhw = (VHWSentence) event.getSentence();
 	        	speedKnots = new Knots(vhw.getSpeedKnots());
-	        	degreesMagnetic = new DegreesFloat(vhw.getDegreesMagnetic());
-	        	degreesTrue = new DegreesFloat(vhw.getDegreesTrue());
+	        	degreesMagnetic = new DegreesDecimal(vhw.getDegreesMagnetic());
+	        	degreesTrue = new DegreesDecimal(vhw.getDegreesTrue());
 	      		}
 			}
 	        catch (OutOfRange e) {

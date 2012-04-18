@@ -23,7 +23,7 @@ import mise.marssa.footprint.datatypes.MString;
 import mise.marssa.footprint.datatypes.composite.Coordinate;
 import mise.marssa.footprint.datatypes.composite.Latitude;
 import mise.marssa.footprint.datatypes.composite.Longitude;
-import mise.marssa.footprint.datatypes.decimal.DegreesFloat;
+import mise.marssa.footprint.datatypes.decimal.DegreesDecimal;
 import mise.marssa.footprint.datatypes.decimal.MDecimal;
 import mise.marssa.footprint.datatypes.decimal.distance.Metres;
 import mise.marssa.footprint.datatypes.decimal.speed.Knots;
@@ -101,7 +101,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * 
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getCOG()
 	 */
-	public DegreesFloat getCOG() throws NoConnection, NoValue {
+	public DegreesDecimal getCOG() throws NoConnection, NoValue {
 		logger.trace(
 				"Getting COG from GPSReceiver with Host: {} and Port: {}.",
 				host, port);
@@ -109,7 +109,7 @@ public class GpsReceiver implements IGpsReceiver {
 			try {
 				double cog = ep.poll().getFixes().get(0).getCourse();
 				logger.trace(MMarker.GETTER, "Returning COG {} .", cog);
-				return new DegreesFloat(cog);
+				return new DegreesDecimal(cog);
 			} catch (IOException e) {
 				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.intValue()) {
 					Object[] hoPo = { host, port, e.getMessage(), e.getCause() };
@@ -163,9 +163,9 @@ public class GpsReceiver implements IGpsReceiver {
 					// throw new NoConnection("No TPV object could be read");
 				}
 				TPVObject tpv = tpvList.get(0);
-				Latitude latitude = new Latitude(new DegreesFloat(
+				Latitude latitude = new Latitude(new DegreesDecimal(
 						tpv.getLatitude()));
-				Longitude longitude = new Longitude(new DegreesFloat(
+				Longitude longitude = new Longitude(new DegreesDecimal(
 						tpv.getLongitude()));
 				logger.trace(MMarker.GETTER, "Returning Coordinate: {} .",
 						new Coordinate(latitude, longitude).toString());
