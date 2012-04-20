@@ -101,7 +101,8 @@ public class LabJack {
 	 * The register containing the number of timers enabled. For the LabJack U3
 	 * this can be a value between 0 and 2
 	 * 
-	 * @see http://labjack.com/support/u3/users-guide/2.9
+	 * @see <a
+	 *      href="http://labjack.com/support/u3/users-guide/2.9">http://labjack.com/support/u3/users-guide/2.9</a>
 	 */
 	static public final MInteger NUM_TIMERS_ENABLED_ADDR = new MInteger(50501);
 
@@ -126,9 +127,10 @@ public class LabJack {
 
 	/**
 	 * The LabJack U3 has only two timers. The number of timers enabled can be
-	 * either none, one timer or two timers.<br />
+	 * either none, one timer or two timers.
 	 * 
-	 * @see http://labjack.com/support/u3/users-guide/2.9
+	 * @see <a
+	 *      href="http://labjack.com/support/u3/users-guide/2.9">http://labjack.com/support/u3/users-guide/2.9</a>
 	 */
 	public enum TimersEnabled {
 		NONE(0), ONE(1), TWO(2);
@@ -138,9 +140,10 @@ public class LabJack {
 	};
 
 	/**
-	 * The LabJack U3 has only two timers.<br />
+	 * The LabJack U3 has only two timers.
 	 * 
-	 * @see http://labjack.com/support/u3/users-guide/2.9.1
+	 * @see <a
+	 *      href="http://labjack.com/support/u3/users-guide/2.9.1">http://labjack.com/support/u3/users-guide/2.9.1</a>
 	 * @see mise.marssa.services.diagnostics.daq.LabJack.TimersEnabled
 	 */
 	public enum Timers {
@@ -217,7 +220,8 @@ public class LabJack {
 	 * Timer base clock can have a mode between 0 and 6.<br />
 	 * <b>Note: Both timers use the same timer clock!</b>
 	 * 
-	 * @see http://labjack.com/support/u3/users-guide/2.9.1
+	 * @see <a
+	 *      href="http://labjack.com/support/u3/users-guide/2.9.1">http://labjack.com/support/u3/users-guide/2.9.1</a>
 	 */
 	public enum TimerConfigMode {
 		PWM_OUTPUT_16BIT(0), // Documented in section 2.9.1.1
@@ -246,7 +250,8 @@ public class LabJack {
 	 * Section 2.9.1.1 of the LabJack documentation has a good description of
 	 * these modes
 	 * 
-	 * @see http://labjack.com/support/u3/users-guide/2.9
+	 * @see <a
+	 *      href="http://labjack.com/support/u3/users-guide/2.9">http://labjack.com/support/u3/users-guide/2.9</a>
 	 * @see mise.marssa.control.LabJack.TIMER_CLOCK_ADDR
 	 */
 	public enum TimerBaseClock {
