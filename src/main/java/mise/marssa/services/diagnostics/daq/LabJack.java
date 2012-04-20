@@ -763,7 +763,7 @@ public class LabJack {
 
 		ByteArrayInputStream bais = new ByteArrayInputStream(both);
 		DataInputStream din = new DataInputStream(bais);
-		double voltage = din.readDouble();
+		double voltage = din.readFloat();
 		logger.info("Returning {} .Volts read from AIN {} .", voltage, AIN);
 		return new MDecimal(voltage);
 	}
