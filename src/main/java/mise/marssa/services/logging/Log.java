@@ -44,14 +44,14 @@ abstract public class Log {
 	
 	@ManyToOne
 	@Cascade({ CascadeType.SAVE_UPDATE })
-	MTimeStamp time;
+	MTimeStamp time_log;
 	
 	public MTimeStamp getTimeStamp() {
-		return this.time;
+		return this.time_log;
 	}
 
 	public void setTimeStamp(MTimeStamp time) {
-		this.time = time;
+		this.time_log = time;
 	}
 
 	public Long getId() {
