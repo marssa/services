@@ -19,7 +19,6 @@ import mise.marssa.footprint.datatypes.decimal.distance.ADistance;
 import mise.marssa.footprint.datatypes.decimal.distance.Metres;
 import mise.marssa.footprint.datatypes.decimal.temperature.ATemperature;
 import mise.marssa.footprint.datatypes.decimal.temperature.DegreesCelcius;
-import mise.marssa.footprint.datatypes.decimal.volume.AVolume;
 import mise.marssa.footprint.exceptions.OutOfRange;
 import mise.marssa.footprint.interfaces.navigation.IDepthSensor;
 import mise.marssa.footprint.logger.MMarker;
@@ -102,8 +101,6 @@ public class DepthSensor implements IDepthSensor, SentenceListener {
 			}
 		} catch (OutOfRange e) {
 			logger.debug("Value is out of range", new OutOfRange());
-			// TODO Auto-generated catch block
-			// e.printStackTrace();
 		}
 	}
 }

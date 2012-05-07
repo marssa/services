@@ -41,11 +41,11 @@ abstract public class Log {
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
 	Long id;
-	
+
 	@ManyToOne
 	@Cascade({ CascadeType.SAVE_UPDATE })
 	MTimeStamp time;
-	
+
 	public MTimeStamp getTimeStamp() {
 		return this.time;
 	}
@@ -53,14 +53,4 @@ abstract public class Log {
 	public void setTimeStamp(MTimeStamp time) {
 		this.time = time;
 	}
-
-	public Long getId() {
-		return id;
-	}
-
-	private void setId(Long id) {
-		this.id = id;
-	}
-
-	
 }
