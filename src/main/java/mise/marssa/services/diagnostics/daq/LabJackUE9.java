@@ -24,12 +24,8 @@ import java.util.Iterator;
 
 import mise.marssa.footprint.datatypes.MString;
 import mise.marssa.footprint.datatypes.integer.MInteger;
-import mise.marssa.footprint.exceptions.ConfigurationError;
 import mise.marssa.footprint.exceptions.NoConnection;
-import mise.marssa.footprint.exceptions.OutOfRange;
-import mise.marssa.footprint.interfaces.control.lighting.ILightController;
 import mise.marssa.footprint.logger.MMarker;
-import mise.marssa.services.diagnostics.daq.LabJack.LabJackConnection;
 
 import org.slf4j.LoggerFactory;
 
@@ -78,12 +74,7 @@ public class LabJackUE9 extends LabJack {
 	}
 
 	public enum TimerUE9 implements ITimer {
-		TIMER_0(0), 
-		TIMER_1(1), 
-		TIMER_2(2), 
-		TIMER_3(3),
-		TIMER_4(4),
-		TIMER_5(5);
+		TIMER_0(0), TIMER_1(1), TIMER_2(2), TIMER_3(3), TIMER_4(4), TIMER_5(5);
 		private TimerUE9(int timers) {
 		}
 
@@ -94,21 +85,21 @@ public class LabJackUE9 extends LabJack {
 	};
 
 	public enum TimerConfigModeUE9 implements ITimerConfigMode {
-		PWM_OUTPUT_16BIT(0), // Documented in section 
-		PWM_OUTPUT_8BIT(1), // Documented in section 
-		PERIOD_MEASURMENT_RISING_32BIT(2), // Documented in section 
-		PERIOD_MEASURMENT_FALLING_32BIT(3), // Documented in section 
-		DUTY_CYCLE_MEASURMENT(4), // Documented in section 
-		FIRMWARE_COUNTER_INPUT(5), // Documented in section 
-		FIRMWARE_COUNTER_INPUT_DEBOUNCE(6), // Documented in section 
-		FREQUENCY_OUTPUT(7), // Documented in section 
-		QUADRATURE_INPUT(8), // Documented in section 
-		TIME_STOP_INPUT(9), // Documented in section 
-		SYTEM_TIMER_LOWER_32BITS(10), // Documented in section 
-		SYTEM_TIMER_UPPER_32BITS(11), // Documented in section 
-		PERIOD_MEASURMENT_RISING_16BIT(12), // Documented in section 
-		PERIOD_MEASURMENT_FALLING_16BIT(13); // Documented in section 
-		// LINE_TO_LINE(14); // Documented in section 
+		PWM_OUTPUT_16BIT(0), // Documented in section
+		PWM_OUTPUT_8BIT(1), // Documented in section
+		PERIOD_MEASURMENT_RISING_32BIT(2), // Documented in section
+		PERIOD_MEASURMENT_FALLING_32BIT(3), // Documented in section
+		DUTY_CYCLE_MEASURMENT(4), // Documented in section
+		FIRMWARE_COUNTER_INPUT(5), // Documented in section
+		FIRMWARE_COUNTER_INPUT_DEBOUNCE(6), // Documented in section
+		FREQUENCY_OUTPUT(7), // Documented in section
+		QUADRATURE_INPUT(8), // Documented in section
+		TIME_STOP_INPUT(9), // Documented in section
+		SYTEM_TIMER_LOWER_32BITS(10), // Documented in section
+		SYTEM_TIMER_UPPER_32BITS(11), // Documented in section
+		PERIOD_MEASURMENT_RISING_16BIT(12), // Documented in section
+		PERIOD_MEASURMENT_FALLING_16BIT(13); // Documented in section
+		// LINE_TO_LINE(14); // Documented in section
 
 		private TimerConfigModeUE9(int mode) {
 		}
@@ -147,26 +138,26 @@ public class LabJackUE9 extends LabJack {
 	 * @see mise.marssa.control.LabJack.TimersEnabled
 	 * @see mise.marssa.control.LabJack.setNumEnabledTimers
 	 */
-	public static synchronized LabJack getInstance(MString host, MInteger port)
-			throws UnknownHostException, NoConnection {
+	public static synchronized LabJackUE9 getInstance(MString host,
+			MInteger port) throws UnknownHostException, NoConnection {
 
 		logger.info("Getting a Labjack Instance");
-		LabJackConnection connection = connectionPairs
+		LabJackConnection<LabJackUE9> connection = connectionPairs
 				.getConnection(host, port);
 		logger.debug(MMarker.GETTER, "Returning connection.lj");
 		return connection.lj;
 	}
 
 	private static final class LabJackConnections implements
-			Iterator<LabJackConnection> {
+			Iterator<LabJackConnection<LabJackUE9>> {
 		// static private Set<LabJackConnection> activeConnections;
-		static private ArrayList<LabJackConnection> activeConnections = new ArrayList<LabJack.LabJackConnection>();
+		static private ArrayList<LabJackConnection<LabJackUE9>> activeConnections = new ArrayList<LabJack.LabJackConnection<LabJackUE9>>();
 
 		public boolean hasNext() {
 			return activeConnections.iterator().hasNext();
 		}
 
-		public LabJackConnection next() {
+		public LabJackConnection<LabJackUE9> next() {
 			return activeConnections.iterator().next();
 		}
 
@@ -174,17 +165,17 @@ public class LabJackUE9 extends LabJack {
 			activeConnections.iterator().remove();
 		}
 
-		public LabJackConnection getConnection(MString host, MInteger port)
-				throws UnknownHostException, NoConnection {
+		public LabJackConnection<LabJackUE9> getConnection(MString host,
+				MInteger port) throws UnknownHostException, NoConnection {
 			if (activeConnections != null) {
-				for (LabJackConnection conn : activeConnections) {
+				for (LabJackConnection<LabJackUE9> conn : activeConnections) {
 					if (conn.inUse(host, port))
 						return conn;
 				}
 			}
-			LabJackU3 lj = new LabJackU3(host, port);
-			LabJackConnection newConnectionPair = new LabJackConnection(host,
-					port, lj);
+			LabJackUE9 lj = new LabJackUE9(host, port);
+			LabJackConnection<LabJackUE9> newConnectionPair = new LabJackConnection<LabJackUE9>(
+					host, port, lj);
 			activeConnections.add(newConnectionPair);
 			return newConnectionPair;
 		}

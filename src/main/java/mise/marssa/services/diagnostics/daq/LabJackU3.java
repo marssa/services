@@ -24,12 +24,8 @@ import java.util.Iterator;
 
 import mise.marssa.footprint.datatypes.MString;
 import mise.marssa.footprint.datatypes.integer.MInteger;
-import mise.marssa.footprint.exceptions.ConfigurationError;
 import mise.marssa.footprint.exceptions.NoConnection;
-import mise.marssa.footprint.exceptions.OutOfRange;
-import mise.marssa.footprint.interfaces.control.lighting.ILightController;
 import mise.marssa.footprint.logger.MMarker;
-import mise.marssa.services.diagnostics.daq.LabJack.LabJackConnection;
 
 import org.slf4j.LoggerFactory;
 
@@ -145,26 +141,26 @@ public class LabJackU3 extends LabJack {
 	 * @see mise.marssa.control.LabJack.TimersEnabled
 	 * @see mise.marssa.control.LabJack.setNumEnabledTimers
 	 */
-	public static synchronized LabJack getInstance(MString host, MInteger port)
+	public static synchronized LabJackU3 getInstance(MString host, MInteger port)
 			throws UnknownHostException, NoConnection {
 
 		logger.info("Getting a Labjack Instance");
-		LabJackConnection connection = connectionPairs
+		LabJackConnection<LabJackU3> connection = connectionPairs
 				.getConnection(host, port);
 		logger.debug(MMarker.GETTER, "Returning connection.lj");
 		return connection.lj;
 	}
 
 	private static final class LabJackConnections implements
-			Iterator<LabJackConnection> {
+			Iterator<LabJackConnection<LabJackU3>> {
 		// static private Set<LabJackConnection> activeConnections;
-		static private ArrayList<LabJackConnection> activeConnections = new ArrayList<LabJack.LabJackConnection>();
+		static private ArrayList<LabJackConnection<LabJackU3>> activeConnections = new ArrayList<LabJack.LabJackConnection<LabJackU3>>();
 
 		public boolean hasNext() {
 			return activeConnections.iterator().hasNext();
 		}
 
-		public LabJackConnection next() {
+		public LabJackConnection<LabJackU3> next() {
 			return activeConnections.iterator().next();
 		}
 
@@ -172,17 +168,17 @@ public class LabJackU3 extends LabJack {
 			activeConnections.iterator().remove();
 		}
 
-		public LabJackConnection getConnection(MString host, MInteger port)
-				throws UnknownHostException, NoConnection {
+		public LabJackConnection<LabJackU3> getConnection(MString host,
+				MInteger port) throws UnknownHostException, NoConnection {
 			if (activeConnections != null) {
-				for (LabJackConnection conn : activeConnections) {
+				for (LabJackConnection<LabJackU3> conn : activeConnections) {
 					if (conn.inUse(host, port))
 						return conn;
 				}
 			}
 			LabJackU3 lj = new LabJackU3(host, port);
-			LabJackConnection newConnectionPair = new LabJackConnection(host,
-					port, lj);
+			LabJackConnection<LabJackU3> newConnectionPair = new LabJackConnection<LabJackU3>(
+					host, port, lj);
 			activeConnections.add(newConnectionPair);
 			return newConnectionPair;
 		}

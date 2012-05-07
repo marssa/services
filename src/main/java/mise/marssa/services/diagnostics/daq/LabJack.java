@@ -235,14 +235,14 @@ public abstract class LabJack {
 	 * @author Clayton Tabone
 	 * 
 	 */
-	static final class LabJackConnection {
+	static final class LabJackConnection<LabJackModel> {
 		static Logger labjackConnectionLogger = (Logger) LoggerFactory
 				.getLogger(LabJackConnection.class);
 		MString host;
 		MInteger port;
-		LabJack lj;
+		LabJackModel lj;
 
-		public LabJackConnection(MString host, MInteger port, LabJack lj) {
+		public LabJackConnection(MString host, MInteger port, LabJackModel lj) {
 			this.host = host;
 			this.port = port;
 			this.lj = lj;
