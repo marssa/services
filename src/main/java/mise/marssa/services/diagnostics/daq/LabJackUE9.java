@@ -48,11 +48,13 @@ public class LabJackUE9 extends LabJack {
 		this.write(NUM_TIMERS_ENABLED_ADDR, new MInteger(numTimers.ordinal()));
 	}
 
-	public LabJackUE9(MString host, MInteger port) throws UnknownHostException,
-			NoConnection {
-		super(host, port);
-	}
-
+	/**
+	 * The number of timers which have been enabled for this instance of the
+	 * LabJack class
+	 * 
+	 * @see <a
+	 *      href="http://labjack.com/support/ue9/users-guide/2.10">http://labjack.com/support/ue9/users-guide/2.10</a>
+	 */
 	public enum TimersEnabledUE9 implements ITimersEnabled {
 		NONE(0), ONE(1), TWO(2), THREE(3), FOUR(4), FIVE(0), SIX(6);
 
@@ -110,39 +112,58 @@ public class LabJackUE9 extends LabJack {
 
 		@Override
 		public MInteger getTimerBaseClock() {
-			// TODO Auto-generated method stub
 			return new MInteger(this.ordinal());
 		}
 	}
 
 	/**
-	 * This method return an instance to the singleton class LabJack<br />
-	 * Note: This method is thread-safe Note: Default Timers Enabled: two This
-	 * can be changed using setNumEnabledTimers
+	 * This method return an instance to the singleton class LabJack. This
+	 * method is thread-safe<br />
+	 * <b>Note that this constructor defaults the LabJack configuration with no
+	 * timers enabled</b>
 	 * 
 	 * @param host
 	 *            The host IP to which LabJack is connected
 	 * @param port
 	 *            The host port to which LabJack is connected
-	 * @return singleton instance to the LabJack
+	 * @return singleton instance to the LabJack class
 	 * @throws UnknownHostException
 	 * @throws NoConnection
-	 * @see mise.marssa.control.LabJack.TimersEnabled
-	 * @see mise.marssa.control.LabJack.setNumEnabledTimers
+	 * @see TimersEnabledUE9
 	 */
 	public static synchronized LabJackUE9 getInstance(MString host,
 			MInteger port) throws UnknownHostException, NoConnection {
+		return getInstance(host, port, TimersEnabledUE9.NONE);
+	}
+
+	/**
+	 * This method return an instance to the singleton class LabJack. This
+	 * method is thread-safe
+	 * 
+	 * @param host
+	 *            The host IP to which LabJack is connected
+	 * @param port
+	 *            The host port to which LabJack is connected
+	 * @param numTimers
+	 *            The number of timers which have been enabled
+	 * @return singleton instance to the LabJack class
+	 * @throws UnknownHostException
+	 * @throws NoConnection
+	 * @see TimersEnabledUE9
+	 */
+	public static synchronized LabJackUE9 getInstance(MString host,
+			MInteger port, TimersEnabledUE9 numTimers)
+			throws UnknownHostException, NoConnection {
 
 		logger.info("Getting a Labjack Instance");
 		LabJackConnection<LabJackUE9> connection = connectionPairs
-				.getConnection(host, port);
+				.getConnection(host, port, numTimers);
 		logger.debug(MMarker.GETTER, "Returning connection.lj");
 		return connection.lj;
 	}
 
 	private static final class LabJackConnections implements
 			Iterator<LabJackConnection<LabJackUE9>> {
-		// static private Set<LabJackConnection> activeConnections;
 		static private ArrayList<LabJackConnection<LabJackUE9>> activeConnections = new ArrayList<LabJack.LabJackConnection<LabJackUE9>>();
 
 		public boolean hasNext() {
@@ -158,14 +179,15 @@ public class LabJackUE9 extends LabJack {
 		}
 
 		public LabJackConnection<LabJackUE9> getConnection(MString host,
-				MInteger port) throws UnknownHostException, NoConnection {
+				MInteger port, TimersEnabledUE9 numTimers)
+				throws UnknownHostException, NoConnection {
 			if (activeConnections != null) {
 				for (LabJackConnection<LabJackUE9> conn : activeConnections) {
 					if (conn.inUse(host, port))
 						return conn;
 				}
 			}
-			LabJackUE9 lj = new LabJackUE9(host, port);
+			LabJackUE9 lj = new LabJackUE9(host, port, numTimers);
 			LabJackConnection<LabJackUE9> newConnectionPair = new LabJackConnection<LabJackUE9>(
 					host, port, lj);
 			activeConnections.add(newConnectionPair);

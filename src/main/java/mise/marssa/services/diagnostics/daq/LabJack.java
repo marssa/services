@@ -247,7 +247,7 @@ public abstract class LabJack {
 			throws UnknownHostException, NoConnection {
 		Object[] labjackInformation = { host, port, numTimers };
 		logger.info(
-				"Connecting to a Labjack having host {} . port {} . and enabling {} . timers",
+				"Connecting to a Labjack having host {}, port {}, and enabling {} timers",
 				labjackInformation);
 		try {
 			InetAddress address = InetAddress.getByName(host.getContents()); // the
@@ -287,60 +287,20 @@ public abstract class LabJack {
 			this.write(NUM_TIMERS_ENABLED_ADDR, new MInteger(numTimers
 					.getTimersEnabled().intValue()));
 		} catch (UnknownHostException e) {
-			logger.error("UnknownHostException- Cannot find host{} . ",
-					host.toString(), new NoConnection());
-			// throw new NoConnection("Cannot find host: " + host +
-			// "Exception details\n" + e.getMessage(), e.getCause());
+			NoConnection nc = new NoConnection("UnknownHostException\n"
+					+ e.getMessage(), e.getCause());
+			logger.error("Cannot find host{} . ", host, nc);
+			throw nc;
 		} catch (IOException e) {
-			logger.error("IOException- Cannot connect to Labjack on host{} . ",
-					host.toString(), new NoConnection());
-			// throw new NoConnection("Cannot connect to LabJack on host: " +
-			// host.getContents() + "\nException details:\n" + e.getMessage(),
-			// e.getCause());
+			NoConnection nc = new NoConnection(
+					"IOException\n" + e.getMessage(), e.getCause());
+			logger.error("Cannot connect to Labjack on host {}", host, nc);
+			throw nc;
 		} catch (Exception e) {
-			logger.error("Network failure (TCPMasterConnection):{} . ",
-					host.toString(), new NoConnection());
-			// throw new NoConnection("Network failure (TCPMasterConnection): "
-			// + host + "Exception details\n" + e.getMessage(), e.getCause());
-		}
-	}
-
-	public LabJack(MString host, MInteger port) throws UnknownHostException,
-			NoConnection {
-		Object[] labjackInformation = { host, port, numTimers };
-		logger.info(
-				"Connecting to a Labjack having host {} . port {} . and enabling {} . timers",
-				labjackInformation);
-		try {
-			InetAddress address = InetAddress.getByName(host.getContents()); // the
-																				// slave's
-																				// address
-			logger.info(MMarker.SETTER, "Setting the readConnection");
-			readConnection = new TCPMasterConnection(address);
-			readConnection.setPort(port.intValue());
-			readConnection.connect();
-			logger.info(MMarker.SETTER, "Setting the writeConnection");
-			writeConnection = new TCPMasterConnection(address);
-			writeConnection.setPort(port.intValue());
-			writeConnection.connect();
-			this.host = host;
-			this.port = port;
-		} catch (UnknownHostException e) {
-			logger.error("UnknownHostException- Cannot find host{} . ",
-					host.toString(), new NoConnection());
-			// throw new NoConnection("Cannot find host: " + host +
-			// "Exception details\n" + e.getMessage(), e.getCause());
-		} catch (IOException e) {
-			logger.error("IOException- Cannot connect to Labjack on host{} . ",
-					host.toString(), new NoConnection());
-			// throw new NoConnection("Cannot connect to LabJack on host: " +
-			// host.getContents() + "\nException details:\n" + e.getMessage(),
-			// e.getCause());
-		} catch (Exception e) {
-			logger.error("Network failure (TCPMasterConnection):{} . ",
-					host.toString(), new NoConnection());
-			// throw new NoConnection("Network failure (TCPMasterConnection): "
-			// + host + "Exception details\n" + e.getMessage(), e.getCause());
+			NoConnection nc = new NoConnection("Exception\n" + e.getMessage(),
+					e.getCause());
+			logger.error("Network failure (TCPMasterConnection): {}", host, nc);
+			throw nc;
 		}
 	}
 
@@ -363,8 +323,9 @@ public abstract class LabJack {
 	 * @throws CloneNotSupportedException
 	 */
 	public Object clone() throws CloneNotSupportedException {
-		logger.error("Clone is not supported", new CloneNotSupportedException());
-		throw new CloneNotSupportedException();
+		CloneNotSupportedException e = new CloneNotSupportedException();
+		logger.error("Clone is not supported\n" + e.getMessage(), e.getCause());
+		throw e;
 	}
 
 	/**
@@ -385,20 +346,6 @@ public abstract class LabJack {
 		return port;
 	}
 
-	/**
-	 * Set the number of Enabled Timers
-	 * 
-	 * @param numTimers
-	 * @throws NoConnection
-	 * @see mise.marssa.control.LabJack.TimersEnabled
-	 */
-	public void setNumEnabledTimers(ITimersEnabled numTimers)
-			throws NoConnection {
-		this.numTimers = numTimers;
-		this.write(NUM_TIMERS_ENABLED_ADDR, numTimers.getTimersEnabled());
-	}
-
-	// TODO check if we should leave the timer mode to be changed later on
 	// TODO add comment about clock divisor for first three modes
 	/**
 	 * Sets the timer mode The number of timers enabled is set from the
@@ -422,10 +369,11 @@ public abstract class LabJack {
 				.intValue()) {
 			ConfigurationError e = new ConfigurationError("Timer "
 					+ timer.getTimer() + " is not enabled");
-			logger.error("ConfigurationError Exception", e);
+			logger.error("ConfigurationError Exception\n" + e.getMessage(),
+					e.getCause());
 			throw e;
 		}
-		logger.info("Setting timer {} . with a timerConfiMode {} .", timer,
+		logger.info("Setting timer {} with a timerConfigMode {}.", timer,
 				timerConfigMode);
 		Timer t = timersList[timer.getTimer().intValue()];
 		logger.debug("Calling the writeMultiple method");
@@ -457,7 +405,7 @@ public abstract class LabJack {
 	}
 
 	/**
-	 * Sets the value of the given timer The number of timers enabled is set
+	 * Sets the value of the given timer. The number of timers enabled is set
 	 * from the constructor. Since this is variable, the timer selected here may
 	 * not be available.<br />
 	 * Note: 0 means duty cycle = 100% and 65535 means duty cycle = 0%
@@ -475,17 +423,16 @@ public abstract class LabJack {
 		logger.info(MMarker.SETTER, "Setting timerValue");
 		if ((timer.getTimer().intValue() + 1) > numTimers.getTimersEnabled()
 				.intValue()) {
-			logger.error("Timer {} . is not enabled", timer.getTimer(),
-					new ConfigurationError());
-			// throw new ConfigurationError("Timer " + timer.ordinal() +
-			// " is not enabled");
+			ConfigurationError e = new ConfigurationError("Timer "
+					+ timer.getTimer() + " is not enabled");
+			logger.error("ConfigurationError", e);
+			throw e;
 		}
 		if (timerValue.doubleValue() >= Math.pow(2, 32)) {
-			logger.error(
-					"TimerValue must be a value between 0 and 4294967294 (2^32 - 1)",
-					new OutOfRange());
-			throw new OutOfRange(
+			OutOfRange e = new OutOfRange(
 					"Timer Value must be a value between 0 and 4294967294 (2^32 - 1)");
+			logger.error("Out of Range Exception", e);
+			throw e;
 		}
 		logger.info("Setting timer {} . with a timerValue {} .", timer,
 				timerValue);
@@ -553,31 +500,34 @@ public abstract class LabJack {
 			logger.info("Executing the Transaction");
 			transaction.execute();
 		} catch (ModbusIOException e) {
-			logger.error(
-					"ModbusIOException- Cannot write to labjack register number {} .",
-					registerNumber);
-			throw new NoConnection("Cannot write to LabJack FIO port"
-					+ (registerNumber) + "\n" + e.getMessage(), e.getCause());
+			NoConnection nc = new NoConnection("ModbusIOException\n"
+					+ e.getMessage(), e.getCause());
+			logger.error("Cannot write to LabJack FIO port" + registerNumber,
+					nc);
+			throw nc;
 		} catch (ModbusSlaveException e) {
-			logger.error(
-					"ModbusSlaveExceptio- Cannot write to labjack register number {} .",
-					registerNumber);
-			throw new NoConnection(
-					"ModBus Slave exception cannot write to register"
-							+ (registerNumber) + "\n" + e.getMessage(),
-					e.getCause());
+			NoConnection nc = new NoConnection("ModBusSlaveException\n"
+					+ e.getMessage(), e.getCause());
+			logger.error("Cannot write to LabJack register number "
+					+ registerNumber, nc);
+			throw nc;
 		} catch (ModbusException e) {
-			logger.error(
-					"ModbusException Cannot write to labjack register number {} .",
-					registerNumber);
-			throw new NoConnection("ModBus exception cannot write to register"
-					+ (registerNumber) + "\n" + e.getMessage(), e.getCause());
+			NoConnection nc = new NoConnection("ModBusException\n"
+					+ e.getMessage(), e.getCause());
+			logger.error("Cannot write to labjack register number "
+					+ registerNumber, nc);
+			throw nc;
 		}
 	}
 
 	/**
-	 * A modification of the write method to accept boolean as a parameter true
-	 * to set logic to hgigh flase to low
+	 * A modification of the write method to accept boolean as a parameter.
+	 * 
+	 * @param registerNumber
+	 *            The register number for the port which will take the new state
+	 * @param state
+	 *            The state of the output port (true = high, false = low)
+	 * @throws NoConnection
 	 */
 	public void write(MInteger registerNumber, MBoolean state)
 			throws NoConnection {
@@ -616,24 +566,22 @@ public abstract class LabJack {
 			logger.info("Executing the Transaction");
 			transaction.execute();
 		} catch (ModbusIOException e) {
-			logger.error(
-					"ModbusIOException- Cannot write to labjack register number {} .",
-					registerNumber);
-			throw new NoConnection("Cannot write to LabJack FIO port"
-					+ registerNumber.subtract(new MInteger(6000)) + "\n"
+			NoConnection nc = new NoConnection("ModbusIOException\n"
 					+ e.getMessage(), e.getCause());
+			logger.error("Cannot write to labjack register number "
+					+ registerNumber, nc);
+			throw nc;
 		} catch (ModbusSlaveException e) {
-			logger.error(
-					"ModbusSlaveExceptio- Cannot write to labjack register number {} .",
-					registerNumber);
-			throw new NoConnection(
-					"ModBus Slave exception cannot write to register"
-							+ registerNumber.subtract(new MInteger(6000))
-							+ "\n" + e.getMessage(), e.getCause());
+			NoConnection nc = new NoConnection("ModBusSlaveException\n"
+					+ e.getMessage(), e.getCause());
+			logger.error("Cannot write to LabJack register number "
+					+ registerNumber, nc);
+			throw nc;
 		} catch (ModbusException e) {
-			logger.error(
-					"ModbusException Cannot write to labjack register number {} .",
-					registerNumber);
+			NoConnection nc = new NoConnection("ModbusException\n"
+					+ e.getMessage(), e.getCause());
+			logger.error("Cannot write to LabJack register number "
+					+ registerNumber, nc);
 			throw new NoConnection("ModBus exception cannot write to register"
 					+ (registerNumber.subtract(new MInteger(6000))) + "\n"
 					+ e.getMessage(), e.getCause());
@@ -662,23 +610,20 @@ public abstract class LabJack {
 			logger.info("Executing the Transaction");
 			transaction.execute();
 		} catch (ModbusIOException e) {
-			logger.error(
-					"ModbusIOException- Cannot read from labjack AIN {} .", AIN);
-			throw new NoConnection("Cannot read from LabJack port AIN" + AIN
-					+ "\n" + e.getMessage(), e.getCause());
+			NoConnection nc = new NoConnection("ModbusIOException\n"
+					+ e.getMessage(), e.getCause());
+			logger.error("Cannot read from LabJack AIN " + AIN, nc);
+			throw nc;
 		} catch (ModbusSlaveException e) {
-			logger.error(
-					"ModbusSlaveExceptio- Cannot read from labjack AIN {} .",
-					AIN);
-			throw new NoConnection(
-					"ModBus Slave exception cannot write to register\n"
-							+ e.getMessage(), e.getCause());
+			NoConnection nc = new NoConnection("ModBusSlaveException\n"
+					+ e.getMessage(), e.getCause());
+			logger.error("Cannot read from LabJack AIN " + AIN, nc);
+			throw nc;
 		} catch (ModbusException e) {
-			logger.error("ModbusException Cannot read from labjack AIN {} .",
-					AIN);
-			throw new NoConnection(
-					"ModBus exception cannot write to register\n"
-							+ e.getMessage(), e.getCause());
+			NoConnection nc = new NoConnection("ModbusException\n"
+					+ e.getMessage(), e.getCause());
+			logger.error("Cannot read from LabJack AIN " + AIN, nc);
+			throw nc;
 		}
 
 		res = (ReadMultipleRegistersResponse) transaction.getResponse();
