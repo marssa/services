@@ -40,21 +40,11 @@ public class LabJackU3 extends LabJack {
 	private static Logger logger = (Logger) LoggerFactory
 			.getLogger(LabJackUE9.class.getName());
 
-	private TimersEnabledU3 numTimers;
-	private TimerConfigModeU3 timerConfiguration;
-	private TimerBaseClockU3 timerBaseClock;
-	private TimerU3 timer;
 	static private LabJackConnections connectionPairs = new LabJackConnections();
 
-	public LabJackU3(MString host, MInteger port, TimersEnabledU3 numTimers,
-			TimerConfigModeU3 timerConfiguration,
-			TimerBaseClockU3 timerBaseClock, TimerU3 timer)
+	private LabJackU3(MString host, MInteger port, TimersEnabledU3 numTimers)
 			throws UnknownHostException, NoConnection {
 		super(host, port, numTimers);
-		this.numTimers = numTimers;
-		this.timerConfiguration = timerConfiguration;
-		this.timerBaseClock = timerBaseClock;
-		this.timer = timer;
 		this.write(NUM_TIMERS_ENABLED_ADDR, new MInteger(numTimers.ordinal()));
 	}
 

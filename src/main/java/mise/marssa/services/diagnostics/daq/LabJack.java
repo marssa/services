@@ -29,6 +29,7 @@ import mise.marssa.footprint.exceptions.ConfigurationError;
 import mise.marssa.footprint.exceptions.NoConnection;
 import mise.marssa.footprint.exceptions.OutOfRange;
 import mise.marssa.footprint.logger.MMarker;
+import mise.marssa.services.diagnostics.daq.LabJackUE9.TimerUE9;
 import net.wimpi.modbus.ModbusException;
 import net.wimpi.modbus.ModbusIOException;
 import net.wimpi.modbus.ModbusSlaveException;
@@ -132,7 +133,7 @@ public abstract class LabJack {
 	 *      href="http://labjack.com/support/u3/users-guide/2.9.1">http://labjack.com/support/u3/users-guide/2.9.1</a>
 	 * @see mise.marssa.services.diagnostics.daq.LabJack.TimersEnabled
 	 */
-	public class Timers {
+	public class Timer {
 		ITimer timerNumber;
 		// Timer mode addresses
 		private final MInteger TIMER0_CONFIG_MODE_ADDR = new MInteger(7100);
@@ -142,7 +143,7 @@ public abstract class LabJack {
 		private final MInteger TIMER4_CONFIG_MODE_ADDR = new MInteger(7108);
 		private final MInteger TIMER5_CONFIG_MODE_ADDR = new MInteger(7110);
 
-		// Timer mode addresses
+		// Timer value addresses
 		private final MInteger TIMER0_VALUE_ADDR = new MInteger(7200);
 		private final MInteger TIMER1_VALUE_ADDR = new MInteger(7202);
 		private final MInteger TIMER2_VALUE_ADDR = new MInteger(7204);
@@ -150,12 +151,10 @@ public abstract class LabJack {
 		private final MInteger TIMER4_VALUE_ADDR = new MInteger(7208);
 		private final MInteger TIMER5_VALUE_ADDR = new MInteger(7210);
 
-		private ITimerConfigMode timerConfigMode;
 		private MInteger timerConfigModeAddress;
-		private MInteger timerValue;
 		private MInteger timerValueAddress;
 
-		private Timers(ITimer timerNumber) {
+		private Timer(ITimer timerNumber) {
 			this.timerNumber = timerNumber;
 			// Constructor belongs to an enum class
 			// Hence the only possible values for the timerNumber are 0 and 1
@@ -191,43 +190,7 @@ public abstract class LabJack {
 		protected int getOrdinal() {
 			return timerNumber.getTimer().intValue();
 		}
-
-		private void setTimerConfigMode(ITimerConfigMode timerConfigMode) {
-			logger.debug(MMarker.SETTER, "Setting TimerConfigMode to {} .",
-					timerConfigMode.getTimerConfigMode());
-			this.timerConfigMode = timerConfigMode;
-		}
-
-		private ITimerConfigMode getTimerConfigMode() {
-			logger.debug(MMarker.GETTER, "Returning TimerConfigMode {} .",
-					timerConfigMode.getTimerConfigMode());
-			return timerConfigMode;
-		}
-
-		private MInteger getTimerConfigModeAddress() {
-			logger.debug(MMarker.GETTER,
-					"Returning TimerConfigModeAddress {} .",
-					timerConfigModeAddress.longValue());
-			return this.timerConfigModeAddress;
-		}
-
-		private MInteger getTimerValue() {
-			logger.debug(MMarker.GETTER, "Returning TimerValue {} .",
-					timerValue);
-			return this.timerValue;
-		}
-
-		private void setTimerValue(MInteger timerValue) {
-			logger.debug(MMarker.SETTER, "Setting TimerValue {} .", timerValue);
-			this.timerValue = timerValue;
-		}
-
-		private MInteger getTimerValueAddress() {
-			logger.debug(MMarker.GETTER, "Returning TimerValueAddress {} .",
-					timerValueAddress);
-			return this.timerValueAddress;
-		}
-	};
+	}
 
 	/**
 	 * Contains a host/port connection and the instance of the LabJack class
@@ -267,9 +230,13 @@ public abstract class LabJack {
 	// The number of timers
 	private ITimersEnabled numTimers;
 
+	// The list of timer instance
+	private Timer[] timersList;
+
 	// The base clock of the timers
 	private ITimerBaseClock timerBaseClock;
 
+	// This is the divisor for the timerBaseClock
 	private MInteger timerClockDivisor;
 
 	// host and port variables
@@ -297,6 +264,26 @@ public abstract class LabJack {
 			this.host = host;
 			this.port = port;
 			this.numTimers = numTimers;
+
+			if (numTimers.getTimersEnabled().intValue() > 0) {
+				timersList = new Timer[numTimers.getTimersEnabled().intValue()];
+
+				switch (numTimers.getTimersEnabled().intValue()) {
+				case 6:
+					timersList[5] = new Timer(TimerUE9.TIMER_5);
+				case 5:
+					timersList[4] = new Timer(TimerUE9.TIMER_4);
+				case 4:
+					timersList[3] = new Timer(TimerUE9.TIMER_3);
+				case 3:
+					timersList[2] = new Timer(TimerUE9.TIMER_2);
+				case 2:
+					timersList[1] = new Timer(TimerUE9.TIMER_1);
+				case 1:
+					timersList[0] = new Timer(TimerUE9.TIMER_0);
+					break;
+				}
+			}
 			this.write(NUM_TIMERS_ENABLED_ADDR, new MInteger(numTimers
 					.getTimersEnabled().intValue()));
 		} catch (UnknownHostException e) {
@@ -318,7 +305,8 @@ public abstract class LabJack {
 		}
 	}
 
-	public LabJack(MString host, MInteger port)throws UnknownHostException, NoConnection {
+	public LabJack(MString host, MInteger port) throws UnknownHostException,
+			NoConnection {
 		Object[] labjackInformation = { host, port, numTimers };
 		logger.info(
 				"Connecting to a Labjack having host {} . port {} . and enabling {} . timers",
@@ -379,8 +367,6 @@ public abstract class LabJack {
 		throw new CloneNotSupportedException();
 	}
 
-	
-
 	/**
 	 * Return host address
 	 * 
@@ -412,6 +398,8 @@ public abstract class LabJack {
 		this.write(NUM_TIMERS_ENABLED_ADDR, numTimers.getTimersEnabled());
 	}
 
+	// TODO check if we should leave the timer mode to be changed later on
+	// TODO add comment about clock divisor for first three modes
 	/**
 	 * Sets the timer mode The number of timers enabled is set from the
 	 * constructor. Since this is variable, the timer selected here may not be
@@ -424,24 +412,25 @@ public abstract class LabJack {
 	 * @throws ConfigurationError
 	 * @throws NoConnection
 	 * @see mise.marssa.services.diagnostics.daq.LabJack.TimersEnabled
+	 * @see <a
+	 *      href="http://labjack.com/support/u3/users-guide/2.9">http://labjack.com/support/u3/users-guide/2.9</a>
 	 */
-	public void setTimerMode(Timers timer, ITimerConfigMode timerConfigMode)
+	public void setTimerMode(ITimer timer, ITimerConfigMode timerConfigMode)
 			throws ConfigurationError, NoConnection {
 		logger.info(MMarker.SETTER, "Setting timerMode");
-		if ((timer.getOrdinal() + 1) > numTimers.getTimersEnabled().intValue()) {
-			logger.error("Timer {} . is not enabled", timer.getOrdinal(),
-					new ConfigurationError());
-			// throw new ConfigurationError("Timer " + timer.ordinal() +
-			// " is not enabled");
+		if ((timer.getTimer().intValue() + 1) > numTimers.getTimersEnabled()
+				.intValue()) {
+			ConfigurationError e = new ConfigurationError("Timer "
+					+ timer.getTimer() + " is not enabled");
+			logger.error("ConfigurationError Exception", e);
+			throw e;
 		}
 		logger.info("Setting timer {} . with a timerConfiMode {} .", timer,
 				timerConfigMode);
-		timer.setTimerConfigMode(timerConfigMode);// /this timer is of the class
-													// in labjack
+		Timer t = timersList[timer.getTimer().intValue()];
 		logger.debug("Calling the writeMultiple method");
-		writeMultiple(timer.timerConfigModeAddress,
-				timerConfigMode.getTimerConfigMode());// /this timer is of the
-														// class in labjack
+		writeMultiple(t.timerConfigModeAddress,
+				timerConfigMode.getTimerConfigMode());
 	}
 
 	/**
@@ -453,8 +442,6 @@ public abstract class LabJack {
 	 * @see mise.marssa.services.diagnostics.daq.LabJack.TimerBaseClock
 	 * @see mise.marssa.control.LabJack.TIMER_BASE_CLOCK_ADDR
 	 */
-
-	// TODO
 	public void setTimerBaseClock(ITimerBaseClock timerBaseClock)
 			throws NoConnection {
 		logger.info(MMarker.SETTER, "Setting TimerBasedClock");
@@ -462,6 +449,11 @@ public abstract class LabJack {
 		logger.debug("Calling the writeMultiple method");
 		writeMultiple(LabJack.TIMER_BASE_CLOCK_ADDR,
 				timerBaseClock.getTimerBaseClock());
+	}
+
+	public ITimerBaseClock getTimerBaseClock() {
+		logger.info(MMarker.GETTER, "Getting TimerBasedClock");
+		return this.timerBaseClock;
 	}
 
 	/**
@@ -478,11 +470,12 @@ public abstract class LabJack {
 	 * @throws OutOfRange
 	 * @see mise.marssa.services.diagnostics.daq.LabJack.TimersEnabled
 	 */
-	public void setTimerValue(Timers timer, MInteger timerValue)
+	public void setTimerValue(ITimer timer, MInteger timerValue)
 			throws NoConnection, OutOfRange, ConfigurationError {
 		logger.info(MMarker.SETTER, "Setting timerValue");
-		if ((timer.getOrdinal() + 1) > numTimers.getTimersEnabled().intValue()) {
-			logger.error("Timer {} . is not enabled", timer.getOrdinal(),
+		if ((timer.getTimer().intValue() + 1) > numTimers.getTimersEnabled()
+				.intValue()) {
+			logger.error("Timer {} . is not enabled", timer.getTimer(),
 					new ConfigurationError());
 			// throw new ConfigurationError("Timer " + timer.ordinal() +
 			// " is not enabled");
@@ -496,12 +489,9 @@ public abstract class LabJack {
 		}
 		logger.info("Setting timer {} . with a timerValue {} .", timer,
 				timerValue);
-		timer.setTimerValue(timerValue);// /this timer is of the class in
-										// labjack
+		Timer t = timersList[timer.getTimer().intValue()];
 		logger.debug("Calling the writeMultiple method");
-		writeMultiple(timer.timerValueAddress, timerValue);// /this timer is of
-															// the class in
-															// labjack
+		writeMultiple(t.timerValueAddress, timerValue);
 	}
 
 	/**
@@ -523,14 +513,20 @@ public abstract class LabJack {
 				"Setting timerClockDivisor with value {} .", timerClockDivisor);
 		if (timerClockDivisor.intValue() < 1
 				|| timerClockDivisor.intValue() > 256) {
-			logger.error("TimerClockDivisor must be a value between 1 and 256",
-					new OutOfRange());
-			// throw new
-			// OutOfRange("Timer Clock Divisor must be a value between 1 and 256");
+			OutOfRange e = new OutOfRange(
+					"Timer Clock Divisor must be a value between 1 and 256");
+			logger.error("OutOfRange Exception", e);
+			throw e;
 		}
 		this.timerClockDivisor = timerClockDivisor;
 		logger.debug("Calling the writeMultiple method");
 		writeMultiple(LabJack.TIMER_BASE_CLOCK_ADDR, timerClockDivisor);
+	}
+
+	public MInteger getTimerClockDivisor() {
+		logger.info(MMarker.GETTER,
+				"Getting timerClockDivisor with value {} .", timerClockDivisor);
+		return timerClockDivisor;
 	}
 
 	/**
@@ -540,42 +536,42 @@ public abstract class LabJack {
 	 */
 	public void write(MInteger registerNumber, MInteger registerValue)
 			throws NoConnection {
-		logger.info("Writing to register {} . with a registerValue {} .",registerNumber, registerValue);
+		logger.info("Writing to register {} . with a registerValue {} .",
+				registerNumber, registerValue);
 		SimpleRegister register = new SimpleRegister(registerValue.intValue());
-		WriteSingleRegisterRequest writeRequest = new WriteSingleRegisterRequest(registerNumber.intValue(), register);
+		WriteSingleRegisterRequest writeRequest = new WriteSingleRegisterRequest(
+				registerNumber.intValue(), register);
 
 		// Prepare the transaction
 		logger.info("Preparing the Transaction");
-		ModbusTCPTransaction transaction = new ModbusTCPTransaction(writeConnection);
+		ModbusTCPTransaction transaction = new ModbusTCPTransaction(
+				writeConnection);
 		logger.debug("Labjack setting request to write to a register");
 		transaction.setRequest(writeRequest);
-		// WriteSingleRegisterResponse writeResponse =
-		// (WriteSingleRegisterResponse) transaction.getResponse();
 
 		try {
 			logger.info("Executing the Transaction");
 			transaction.execute();
 		} catch (ModbusIOException e) {
-			// TODO is it feasable to deduce 6000 ????? better as it was
 			logger.error(
 					"ModbusIOException- Cannot write to labjack register number {} .",
 					registerNumber);
 			throw new NoConnection("Cannot write to LabJack FIO port"
-					+ (registerNumber) + "\n"
-					+ e.getMessage(), e.getCause());
+					+ (registerNumber) + "\n" + e.getMessage(), e.getCause());
 		} catch (ModbusSlaveException e) {
 			logger.error(
 					"ModbusSlaveExceptio- Cannot write to labjack register number {} .",
 					registerNumber);
 			throw new NoConnection(
 					"ModBus Slave exception cannot write to register"
-							+ (registerNumber)+ "\n" + e.getMessage(), e.getCause());
+							+ (registerNumber) + "\n" + e.getMessage(),
+					e.getCause());
 		} catch (ModbusException e) {
 			logger.error(
 					"ModbusException Cannot write to labjack register number {} .",
 					registerNumber);
 			throw new NoConnection("ModBus exception cannot write to register"
-					+ (registerNumber) + "\n"+ e.getMessage(), e.getCause());
+					+ (registerNumber) + "\n" + e.getMessage(), e.getCause());
 		}
 	}
 
@@ -614,8 +610,6 @@ public abstract class LabJack {
 
 		logger.debug("Labjack setting request to write multiple registers");
 		transaction.setRequest(writeRequest);
-		// WriteSingleRegisterResponse writeResponse =
-		// (WriteSingleRegisterResponse) transaction.getResponse();
 
 		// Execute the transaction repeat times
 		try {
