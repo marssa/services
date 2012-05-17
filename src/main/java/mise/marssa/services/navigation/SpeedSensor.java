@@ -112,8 +112,8 @@ public class SpeedSensor implements ISpeedSensor, SentenceListener {
 	        }else if(sid.equals("VHW")) {
 	        	VHWSentence vhw = (VHWSentence) event.getSentence();
 	        	speedKnots = new Knots(vhw.getSpeedKnots());
-	        	degreesMagnetic = new DegreesDecimal(vhw.getDegreesMagnetic());
-	        	degreesTrue = new DegreesDecimal(vhw.getDegreesTrue());
+	        	degreesMagnetic = new DegreesDecimal(vhw.getMagneticHeading());
+	        	degreesTrue = new DegreesDecimal(vhw.getHeading());
 	      		}
 			}
 	        catch (OutOfRange e) {

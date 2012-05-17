@@ -113,9 +113,9 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sf</groupId>
+			<groupId>net.sf.marineapi</groupId>
 			<artifactId>marineapi</artifactId>
-			<version>0.5.137-SNAPSHOT</version>
+			<version>0.5.1</version>
 		</dependency>
 	</dependencies>
 

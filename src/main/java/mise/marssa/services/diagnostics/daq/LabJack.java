@@ -209,7 +209,7 @@ public abstract class LabJack {
 			this.host = host;
 			this.port = port;
 			this.lj = lj;
-			Object[] labjackConnection = { host, port, lj };
+			Object[] labjackConnection = { host, port, lj.getClass().getSimpleName() };
 			labjackConnectionLogger
 					.info("Connecting to a Labjack having host {} . port {} . and enabling {} . Labjack",
 							labjackConnection);
