@@ -82,8 +82,7 @@
 	</distributionManagement>
 
 	<repositories>
-		<!-- Temporary repository containing MARSSA artifacts and Java Modbus Library 
-			(jamod) -->
+		<!-- Temporary repository containing MARSSA artifacts -->
 		<repository>
 			<id>marssa-mvn-repo</id>
 			<name>MARSSA Repository on github.com</name>
@@ -110,7 +109,7 @@
 		<dependency>
 			<groupId>net.wimpi</groupId>
 			<artifactId>jamod</artifactId>
-			<version>1.2-SNAPSHOT</version>
+			<version>1.2</version>
 		</dependency>
 		<dependency>
 			<groupId>mise.marssa</groupId>
