@@ -137,6 +137,31 @@
 				</configuration>
 			</plugin>
 
+			<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<executions>
+						<execution>
+							<id>attach-javadocs</id>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<executions>
+						<execution>
+							<id>attach-sources</id>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
 			<!-- Bundle artifact as OSGi bundle -->
 			<plugin>
 				<groupId>org.apache.felix</groupId>
@@ -147,7 +172,7 @@
 					<instructions>
 						<Bundle-Activator>org.marssa.services.Activator</Bundle-Activator>
 						<excludeDependencies>false</excludeDependencies>
-						<Embed-Dependency>*;scope=compile|runtime;inline=false;artifactId=!footprint|libraries</Embed-Dependency>
+						<Embed-Dependency>*;scope=compile|runtime;inline=false;artifactId=!footprint</Embed-Dependency>
 					</instructions>
 				</configuration>
 				<executions>
