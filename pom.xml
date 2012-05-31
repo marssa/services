@@ -145,7 +145,7 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Bundle-Activator>mise.marssa.services.Activator</Bundle-Activator>
+						<Bundle-Activator>org.marssa.services.Activator</Bundle-Activator>
 						<excludeDependencies>false</excludeDependencies>
 						<Embed-Dependency>*;scope=compile|runtime;inline=false;artifactId=!footprint|libraries</Embed-Dependency>
 					</instructions>
