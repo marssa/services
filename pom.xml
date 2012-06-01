@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>mise.marssa</groupId>
+	<groupId>org.marssa</groupId>
 	<artifactId>services</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>bundle</packaging>
@@ -73,12 +73,12 @@
 		<repository>
 			<id>repo</id>
 			<url>https://raw.github.com/marssa/marssa-mvn-repo/master/releases</url>
-		</repository>	
+		</repository>
 		<snapshotRepository>
 			<id>snapshot-repo</id>
 			<url>https://raw.github.com/marssa/marssa-mvn-repo/master/snapshots</url>
-		</snapshotRepository>		
-		
+		</snapshotRepository>
+
 	</distributionManagement>
 
 	<repositories>
@@ -112,7 +112,7 @@
 			<version>1.2</version>
 		</dependency>
 		<dependency>
-			<groupId>mise.marssa</groupId>
+			<groupId>org.marssa</groupId>
 			<artifactId>footprint</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
@@ -138,29 +138,29 @@
 			</plugin>
 
 			<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<executions>
-						<execution>
-							<id>attach-javadocs</id>
-							<goals>
-								<goal>jar</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-source-plugin</artifactId>
-					<executions>
-						<execution>
-							<id>attach-sources</id>
-							<goals>
-								<goal>jar</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
 			<!-- Bundle artifact as OSGi bundle -->
 			<plugin>
@@ -172,7 +172,7 @@
 					<instructions>
 						<Bundle-Activator>org.marssa.services.Activator</Bundle-Activator>
 						<excludeDependencies>false</excludeDependencies>
-						<Embed-Dependency>*;scope=compile|runtime;inline=false;artifactId=!footprint</Embed-Dependency>
+						<Embed-Dependency>*;scope=compile|runtime;inline=false;artifactId=!footprint|libraries</Embed-Dependency>
 					</instructions>
 				</configuration>
 				<executions>
