@@ -22,7 +22,6 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-
 import org.marssa.footprint.datatypes.MString;
 import org.marssa.footprint.datatypes.integer.MInteger;
 import org.marssa.footprint.exceptions.NoConnection;
@@ -78,22 +77,123 @@ public class LabJackUE9 extends LabJack {
 		}
 	};
 
+	/**
+	 * The available Timer modes for LabJackUE9
+	 * 
+	 * @see <a
+	 *      href="http://labjack.com/support/ue9/users-guide/2.10.1">http://labjack.com/support/ue9/users-guide/2.10.1</a>
+	 */
 	public enum TimerConfigModeUE9 implements ITimerConfigMode {
-		PWM_OUTPUT_16BIT(0), // Documented in section
-		PWM_OUTPUT_8BIT(1), // Documented in section
-		PERIOD_MEASURMENT_RISING_32BIT(2), // Documented in section
-		PERIOD_MEASURMENT_FALLING_32BIT(3), // Documented in section
-		DUTY_CYCLE_MEASURMENT(4), // Documented in section
-		FIRMWARE_COUNTER_INPUT(5), // Documented in section
-		FIRMWARE_COUNTER_INPUT_DEBOUNCE(6), // Documented in section
-		FREQUENCY_OUTPUT(7), // Documented in section
-		QUADRATURE_INPUT(8), // Documented in section
-		TIME_STOP_INPUT(9), // Documented in section
-		SYTEM_TIMER_LOWER_32BITS(10), // Documented in section
-		SYTEM_TIMER_UPPER_32BITS(11), // Documented in section
-		PERIOD_MEASURMENT_RISING_16BIT(12), // Documented in section
-		PERIOD_MEASURMENT_FALLING_16BIT(13); // Documented in section
-		// LINE_TO_LINE(14); // Documented in section
+		/**
+		 * PWM Output (16-Bit, Mode 0)
+		 * 
+		 * @see <a
+		 *      href="http://labjack.com/support/ue9/users-guide/2.10.1.1">http://labjack.com/support/ue9/users-guide/2.10.1.1</a>
+		 */
+		PWM_OUTPUT_16BIT(0),
+		/**
+		 * PWM Output (8-Bit, Mode 1)
+		 * 
+		 * @see <a
+		 *      href="http://labjack.com/support/ue9/users-guide/2.10.1.2">http://labjack.com/support/ue9/users-guide/2.10.1.2</a>
+		 */
+		PWM_OUTPUT_8BIT(1),
+
+		/**
+		 * Period Measurement (32-Bit, Modes 2 & 3)
+		 * 
+		 * @see <a
+		 *      href="http://labjack.com/support/ue9/users-guide/2.10.1.3">http://labjack.com/support/ue9/users-guide/2.10.1.3</a>
+		 */
+		PERIOD_MEASURMENT_RISING_32BIT(2),
+
+		/**
+		 * Period Measurement (32-Bit, Modes 2 & 3)
+		 * 
+		 * @see <a
+		 *      href="http://labjack.com/support/ue9/users-guide/2.10.1.3">http://labjack.com/support/ue9/users-guide/2.10.1.3</a>
+		 */
+		PERIOD_MEASURMENT_FALLING_32BIT(3),
+
+		/**
+		 * Duty Cycle Measurement (Mode 4)
+		 * 
+		 * @see <a
+		 *      href="http://labjack.com/support/ue9/users-guide/2.10.1.4">http://labjack.com/support/ue9/users-guide/2.10.1.4</a>
+		 */
+		DUTY_CYCLE_MEASURMENT(4),
+
+		/**
+		 * Firmware Counter Input (Mode 5)
+		 * 
+		 * @see <a
+		 *      href="http://labjack.com/support/ue9/users-guide/2.10.1.5">http://labjack.com/support/ue9/users-guide/2.10.1.5</a>
+		 */
+		FIRMWARE_COUNTER_INPUT(5),
+
+		/**
+		 * Firmware Counter Input With Debounce (Mode 6)
+		 * 
+		 * @see <a
+		 *      href="http://labjack.com/support/ue9/users-guide/2.10.1.6">http://labjack.com/support/ue9/users-guide/2.10.1.6</a>
+		 */
+		FIRMWARE_COUNTER_INPUT_DEBOUNCE(6),
+
+		/**
+		 * Frequency Output (Mode 7)
+		 * 
+		 * @see <a
+		 *      href="http://labjack.com/support/ue9/users-guide/2.10.1.7">http://labjack.com/support/ue9/users-guide/2.10.1.7</a>
+		 */
+		FREQUENCY_OUTPUT(7),
+
+		/**
+		 * Quadrature Input (Mode 8)
+		 * 
+		 * @see <a
+		 *      href="http://labjack.com/support/ue9/users-guide/2.10.1.8">http://labjack.com/support/ue9/users-guide/2.10.1.8</a>
+		 */
+		QUADRATURE_INPUT(8),
+
+		/**
+		 * Timer Stop Input (Mode 9)
+		 * 
+		 * @see <a
+		 *      href="http://labjack.com/support/ue9/users-guide/2.10.1.9">http://labjack.com/support/ue9/users-guide/2.10.1.9</a>
+		 */
+		TIME_STOP_INPUT(9),
+
+		/**
+		 * System Timer Low/High Read (Modes 10 & 11)
+		 * 
+		 * @see <a
+		 *      href="http://labjack.com/support/ue9/users-guide/2.10.1.10">http://labjack.com/support/ue9/users-guide/2.10.1.10</a>
+		 */
+		SYTEM_TIMER_LOWER_32BITS(10),
+
+		/**
+		 * System Timer Low/High Read (Modes 10 & 11)
+		 * 
+		 * @see <a
+		 *      href="http://labjack.com/support/ue9/users-guide/2.10.1.10">http://labjack.com/support/ue9/users-guide/2.10.1.10</a>
+		 */
+		SYTEM_TIMER_UPPER_32BITS(11),
+
+		/**
+		 * Period Measurement (16-Bit, Modes 12 & 13)
+		 * 
+		 * @see <a
+		 *      href="http://labjack.com/support/ue9/users-guide/2.10.1.11">http://labjack.com/support/ue9/users-guide/2.10.1.11</a>
+		 */
+		PERIOD_MEASURMENT_RISING_16BIT(12),
+
+		/**
+		 * Period Measurement (16-Bit, Modes 12 & 13)
+		 * 
+		 * @see <a
+		 *      href="http://labjack.com/support/ue9/users-guide/2.10.1.11">http://labjack.com/support/ue9/users-guide/2.10.1.11</a>
+		 */
+		PERIOD_MEASURMENT_FALLING_16BIT(13);
 
 		private TimerConfigModeUE9(int mode) {
 		}

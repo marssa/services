@@ -32,8 +32,8 @@ public abstract class MTimerTask extends TimerTask {
 	 * Default no-arg constructor. Task name is assigned to the class name of
 	 * the class instance.
 	 * 
-	 * @see {@link Object#getClass()}
-	 * @see {@link Class#getName()}
+	 * @see Object#getClass()
+	 * @see Class#getName()
 	 */
 	public MTimerTask() {
 		super();

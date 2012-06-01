@@ -110,14 +110,16 @@ public abstract class LabJack {
 	/**
 	 * The register containing the timer base clock.
 	 * 
-	 * @see org.marssa.services.diagnostics.daq.LabJack.TimerBaseClock
+	 * @see org.marssa.services.diagnostics.daq.LabJackU3.TimerBaseClockU3
+	 * @see org.marssa.services.diagnostics.daq.LabJackUE9.TimerBaseClockUE9
 	 */
 	static public final MInteger TIMER_BASE_CLOCK_ADDR = new MInteger(7000);
 
 	/**
 	 * The register containing the timer clock divisor.
 	 * 
-	 * @see org.marssa.services.diagnostics.daq.LabJack.TimerBaseClock
+	 * @see org.marssa.services.diagnostics.daq.LabJackU3.TimerBaseClockU3
+	 * @see org.marssa.services.diagnostics.daq.LabJackUE9.TimerBaseClockUE9
 	 */
 	static public final MInteger TIMER_CLOCK_DIVISOR_ADDR = new MInteger(7002);
 
@@ -131,7 +133,8 @@ public abstract class LabJack {
 	 * 
 	 * @see <a
 	 *      href="http://labjack.com/support/u3/users-guide/2.9.1">http://labjack.com/support/u3/users-guide/2.9.1</a>
-	 * @see org.marssa.services.diagnostics.daq.LabJack.TimersEnabled
+	 * @see org.marssa.services.diagnostics.daq.LabJackU3.TimersEnabledU3
+	 * @see org.marssa.services.diagnostics.daq.LabJackUE9.TimersEnabledUE9
 	 */
 	public class Timer {
 		ITimer timerNumber;
@@ -209,7 +212,8 @@ public abstract class LabJack {
 			this.host = host;
 			this.port = port;
 			this.lj = lj;
-			Object[] labjackConnection = { host, port, lj.getClass().getSimpleName() };
+			Object[] labjackConnection = { host, port,
+					lj.getClass().getSimpleName() };
 			labjackConnectionLogger
 					.info("Connecting to a Labjack having host {} . port {} . and enabling {} . Labjack",
 							labjackConnection);
@@ -358,9 +362,12 @@ public abstract class LabJack {
 	 *            the mode for the specified timer
 	 * @throws ConfigurationError
 	 * @throws NoConnection
-	 * @see org.marssa.services.diagnostics.daq.LabJack.TimersEnabled
+	 * @see org.marssa.services.diagnostics.daq.LabJackU3.TimersEnabledU3
+	 * @see org.marssa.services.diagnostics.daq.LabJackUE9.TimersEnabledUE9
 	 * @see <a
 	 *      href="http://labjack.com/support/u3/users-guide/2.9">http://labjack.com/support/u3/users-guide/2.9</a>
+	 * @see <a
+	 *      href="http://labjack.com/support/ue9/users-guide/2.10">http://labjack.com/support/ue9/users-guide/2.10</a>
 	 */
 	public void setTimerMode(ITimer timer, ITimerConfigMode timerConfigMode)
 			throws ConfigurationError, NoConnection {
@@ -387,8 +394,9 @@ public abstract class LabJack {
 	 * @param timerBaseClock
 	 *            the base clock for the LabJack timers
 	 * @throws NoConnection
-	 * @see org.marssa.services.diagnostics.daq.LabJack.TimerBaseClock
-	 * @see mise.marssa.control.LabJack.TIMER_BASE_CLOCK_ADDR
+	 * @see org.marssa.services.diagnostics.daq.LabJackU3.TimerBaseClockU3
+	 * @see org.marssa.services.diagnostics.daq.LabJackUE9.TimerBaseClockUE9
+	 * @see org.marssa.services.diagnostics.daq.LabJack.TIMER_BASE_CLOCK_ADDR
 	 */
 	public void setTimerBaseClock(ITimerBaseClock timerBaseClock)
 			throws NoConnection {
@@ -451,8 +459,9 @@ public abstract class LabJack {
 	 * @throws OutOfRange
 	 * @throws ConfigurationError
 	 * @throws NoConnection
-	 * @see org.marssa.services.diagnostics.daq.LabJack.TimerBaseClock
-	 * @see mise.marssa.control.LabJack.TIMER_CLOCK_DIVISOR_ADDR
+	 * @see org.marssa.services.diagnostics.daq.LabJackU3.TimerBaseClockU3
+	 * @see org.marssa.services.diagnostics.daq.LabJackUE9.TimerBaseClockUE9
+	 * @see org.marssa.services.diagnostics.daq.LabJack.TIMER_CLOCK_DIVISOR_ADDR
 	 */
 	public void setTimerClockDivisor(MInteger timerClockDivisor)
 			throws OutOfRange, NoConnection {
