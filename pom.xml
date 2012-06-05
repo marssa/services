@@ -8,7 +8,7 @@
 	<packaging>bundle</packaging>
 
 	<name>MARSSA Services OSGi Bundle</name>
-	<url>http://www.marsec-xl-projects.org/projects/services</url>
+	<url>https://github.com/marssa/services</url>
 	<description>This project was created specifically to handle the low level services which are offered by the MARSSA backend.</description>
 
 	<licenses>
@@ -31,8 +31,8 @@
 	</organization>
 
 	<scm>
-		<url>https://github.com/marssa/services</url>
-		<connection>git://github.com/marssa/services.git</connection>
+		<url>http://github.com/marssa/services</url>
+		<connection>scm:git:ssh://github.com/marssa/services.git</connection>
 		<developerConnection>scm:git:git@github.com:marssa/services.git</developerConnection>
 	</scm>
 
@@ -68,32 +68,7 @@
 		<url>http://www.marsec-xl-projects.org/projects/services</url>
 	</issueManagement>
 
-	<!-- This stub section is only needed in older versions of Maven -->
-	<distributionManagement>
-		<repository>
-			<id>repo</id>
-			<url>https://raw.github.com/marssa/marssa-mvn-repo/master/releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>snapshot-repo</id>
-			<url>https://raw.github.com/marssa/marssa-mvn-repo/master/snapshots</url>
-		</snapshotRepository>
-
-	</distributionManagement>
-
-	<repositories>
-		<!-- Temporary repository containing MARSSA artifacts -->
-		<repository>
-			<id>marssa-mvn-repo</id>
-			<name>MARSSA Repository on github.com</name>
-			<url>https://raw.github.com/marssa/marssa-mvn-repo/master/snapshots</url>
-		</repository>
-		<repository>
-			<id>snapshots</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-		</repository>
-	</repositories>
-
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.felix</groupId>
@@ -114,7 +89,7 @@
 		<dependency>
 			<groupId>org.marssa</groupId>
 			<artifactId>footprint</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.1.0-beta-01</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.marineapi</groupId>
@@ -387,5 +362,73 @@
 				</plugins>
 			</build>
 		</profile>
+
+		<profile>
+			<id>github</id>
+			<build>
+
+				<plugins>
+					<plugin>
+						<groupId>com.github.github</groupId>
+						<artifactId>downloads-maven-plugin</artifactId>
+						<version>0.5</version>
+						<configuration>
+							<description>Official ${project.name} build of the
+								${project.version} release</description>
+							<override>true</override>
+							<includeAttached>true</includeAttached>
+							<server>github</server>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>upload</goal>
+								</goals>
+								<phase>install</phase>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>com.github.github</groupId>
+						<artifactId>site-maven-plugin</artifactId>
+						<version>0.6</version>
+						<configuration>
+							<message>Building site for ${project.version}</message>
+							<server>github</server>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>site</goal>
+								</goals>
+								<phase>site</phase>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>gpg-sign</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
 	</profiles>
 </project>
