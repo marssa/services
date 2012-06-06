@@ -1,0 +1,9 @@
+org.marssa.services.communication
+org.marssa.services.constants
+org.marssa.services.control
+org.marssa.services.diagnostics.daq
+org.marssa.services.logging
+org.marssa.services.navigation
+org.marssa.services.nmea
+org.marssa.services.osgi
+org.marssa.services.scheduling
