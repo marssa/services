@@ -364,7 +364,7 @@
 		</profile>
 
 		<profile>
-			<id>github</id>
+			<id>github_</id>
 			<build>
 
 				<plugins>
@@ -377,7 +377,7 @@
 								${project.version} release</description>
 							<override>true</override>
 							<includeAttached>true</includeAttached>
-							<server>github</server>
+							<server>github_</server>
 						</configuration>
 						<executions>
 							<execution>
@@ -394,7 +394,7 @@
 						<version>0.6</version>
 						<configuration>
 							<message>Building site for ${project.version}</message>
-							<server>github</server>
+							<server>github_</server>
 						</configuration>
 						<executions>
 							<execution>
