@@ -171,9 +171,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-deploy-plugin</artifactId>
 				<version>2.5</version>
-				<configuration>
-					<altDeploymentRepository>footprint::default::file:../marssa-mvn-repo/snapshots</altDeploymentRepository>
-				</configuration>
+				
 			</plugin>
 
 			<!-- Add license header to all files -->
