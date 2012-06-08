@@ -16,6 +16,7 @@
 package org.marssa.services.navigation;
 
 import java.io.IOException;
+import java.math.MathContext;
 import java.util.List;
 
 import org.json.JSONException;
@@ -87,7 +88,8 @@ public class GpsReceiver implements IGpsReceiver {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.marssa.interfaces.navigation_equipment.IGpsReceiver#getAzimuth()
+	 * @see
+	 * mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getAzimuth()
 	 */
 	public DegreesInteger getAzimuth() {
 		// TODO Auto-generated method stub
@@ -97,7 +99,7 @@ public class GpsReceiver implements IGpsReceiver {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.marssa.interfaces.navigation_equipment.IGpsReceiver#getCOG()
+	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getCOG()
 	 */
 	public DegreesDecimal getCOG() throws NoConnection, NoValue {
 		logger.trace(
@@ -107,7 +109,11 @@ public class GpsReceiver implements IGpsReceiver {
 			try {
 				double cog = ep.poll().getFixes().get(0).getCourse();
 				logger.trace(MMarker.GETTER, "Returning COG {} .", cog);
-				return new DegreesDecimal(cog);
+				if(Double.isNaN(cog)){
+					throw new NoValue();
+				}
+				else
+				return new DegreesDecimal(cog,new MathContext(5));
 			} catch (IOException e) {
 				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.intValue()) {
 					Object[] hoPo = { host, port, e.getMessage(), e.getCause() };
@@ -146,7 +152,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.marssa.interfaces.navigation_equipment.IGpsReceiver#getCoordinate()
+	 * mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getCoordinate()
 	 */
 	public Coordinate getCoordinate() throws NoConnection, NoValue, OutOfRange {
 		logger.trace(
@@ -202,7 +208,7 @@ public class GpsReceiver implements IGpsReceiver {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.marssa.interfaces.navigation_equipment.IGpsReceiver#getDate()
+	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getDate()
 	 */
 	public MDate getDate() throws NoConnection, NoValue {
 		logger.trace(
@@ -250,7 +256,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.marssa.interfaces.navigation_equipment.IGpsReceiver#getElevation()
+	 * mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getElevation()
 	 */
 	public Metres getAltitude() throws NoConnection, NoValue, OutOfRange {
 		logger.trace(
@@ -259,9 +265,13 @@ public class GpsReceiver implements IGpsReceiver {
 		for (int i = 0; i <= ServicesConstants.GENERAL.RETRY_AMOUNT.intValue(); i++) {
 			try {
 				Metres altitude = new Metres(ep.poll().getFixes().get(0)
-						.getAltitude());
+						.getAltitude(), new MathContext(5));
 				logger.trace(MMarker.GETTER, "Returning Elevation: {} .",
 						altitude);
+				if(Double.isNaN(altitude.doubleValue())){
+					throw new NoValue();
+				}
+				else
 				return altitude;
 			} catch (IOException e) {
 				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.intValue()) {
@@ -297,7 +307,7 @@ public class GpsReceiver implements IGpsReceiver {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.marssa.interfaces.navigation_equipment.IGpsReceiver#getHDOP()
+	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getHDOP()
 	 */
 	public MDecimal getHDOP() {
 		// TODO Auto-generated method stub
@@ -308,7 +318,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.marssa.interfaces.navigation_equipment.IGpsReceiver#getLocalZoneTime
+	 * mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getLocalZoneTime
 	 * ()
 	 */
 	public Hours getLocalZoneTime() {
@@ -319,7 +329,7 @@ public class GpsReceiver implements IGpsReceiver {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.marssa.interfaces.navigation_equipment.IGpsReceiver#getPDOP()
+	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getPDOP()
 	 */
 	public MDecimal getPDOP() {
 		// TODO Auto-generated method stub
@@ -330,7 +340,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.marssa.interfaces.navigation_equipment.IGpsReceiver#getSatelliteID()
+	 * mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getSatelliteID()
 	 */
 	public MInteger getSatelliteID() {
 		// TODO Auto-generated method stub
@@ -341,7 +351,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.marssa.interfaces.navigation_equipment.IGpsReceiver#getSatelliteInView
+	 * mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getSatelliteInView
 	 * ()
 	 */
 	public MInteger getSatelliteInView() {
@@ -353,7 +363,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.marssa.interfaces.navigation_equipment.IGpsReceiver#getSatellitesInUse
+	 * mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getSatellitesInUse
 	 * ()
 	 */
 	public MInteger getSatellitesInUse() {
@@ -365,7 +375,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.marssa.interfaces.navigation_equipment.IGpsReceiver#getSignalSrength
+	 * mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getSignalSrength
 	 * ()
 	 */
 	public MDecimal getSignalSrength() {
@@ -376,7 +386,7 @@ public class GpsReceiver implements IGpsReceiver {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.marssa.interfaces.navigation_equipment.IGpsReceiver#getSNR()
+	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getSNR()
 	 */
 	public MDecimal getSNR() {
 		// TODO Auto-generated method stub
@@ -386,7 +396,7 @@ public class GpsReceiver implements IGpsReceiver {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.marssa.interfaces.navigation_equipment.IGpsReceiver#getSOG()
+	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getSOG()
 	 */
 	public Knots getSOG() throws NoConnection, NoValue {
 		logger.info(
@@ -396,8 +406,12 @@ public class GpsReceiver implements IGpsReceiver {
 			try {
 				double speed = ep.poll().getFixes().get(0).getSpeed();
 				logger.trace(MMarker.GETTER, "Returning SOG: {} .", new Knots(
-						speed));
-				return new Knots(speed);
+						speed,new MathContext(5)));
+				if(Double.isNaN(speed)){
+					throw new NoValue();
+				}
+				else
+				return new Knots(speed,new MathContext(6));
 
 			} catch (IOException e) {
 				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.intValue()) {
@@ -436,7 +450,7 @@ public class GpsReceiver implements IGpsReceiver {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.marssa.interfaces.navigation_equipment.IGpsReceiver#getStatus()
+	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getStatus()
 	 */
 	public MString getStatus() {
 		// TODO Auto-generated method stub
@@ -446,7 +460,7 @@ public class GpsReceiver implements IGpsReceiver {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.marssa.interfaces.navigation_equipment.IGpsReceiver#getTime()
+	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getTime()
 	 */
 	public Hours getTime() {
 		// TODO Auto-generated method stub
@@ -456,7 +470,7 @@ public class GpsReceiver implements IGpsReceiver {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.marssa.interfaces.navigation_equipment.IGpsReceiver#getVDOP()
+	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getVDOP()
 	 */
 	public MDecimal getVDOP() {
 		// TODO Auto-generated method stub
@@ -473,8 +487,12 @@ public class GpsReceiver implements IGpsReceiver {
 				// http://www.devhardware.com/c/a/Mobile-Devices/TomTom-GO-920T-GPS-Review/2/
 				double EPT = ep.poll().getFixes().get(0).getCourse();
 				logger.trace(MMarker.GETTER, "Returning EPT: {} .", new Knots(
-						EPT));
+						EPT,new MathContext(5)));
 				// System.out.println("This altitude is " + altitude);
+				if(Double.isNaN(EPT)){
+					throw new NoValue();
+				}
+				else
 				return new Knots(EPT);
 
 			} catch (IOException e) {
