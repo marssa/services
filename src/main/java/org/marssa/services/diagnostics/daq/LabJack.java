@@ -43,9 +43,8 @@ import org.marssa.footprint.exceptions.NoConnection;
 import org.marssa.footprint.exceptions.OutOfRange;
 import org.marssa.footprint.logger.MMarker;
 import org.marssa.services.diagnostics.daq.LabJackUE9.TimerUE9;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import ch.qos.logback.classic.Logger;
 
 /**
  * @author Warren Zahra
@@ -53,8 +52,8 @@ import ch.qos.logback.classic.Logger;
  */
 public abstract class LabJack {
 
-	private static Logger logger = (Logger) LoggerFactory
-			.getLogger(LabJack.class.getName());
+	private static Logger logger = LoggerFactory.getLogger(LabJack.class
+			.getName());
 
 	// Register addresses
 	static public final MInteger FIO4_ADDR = new MInteger(6004);
@@ -202,7 +201,7 @@ public abstract class LabJack {
 	 * 
 	 */
 	static final class LabJackConnection<LabJackModel> {
-		static Logger labjackConnectionLogger = (Logger) LoggerFactory
+		static Logger labjackConnectionLogger = LoggerFactory
 				.getLogger(LabJackConnection.class);
 		MString host;
 		MInteger port;
@@ -308,6 +307,7 @@ public abstract class LabJack {
 		}
 	}
 
+	@Override
 	protected void finalize() throws Throwable {
 		logger.debug("Closing the readConnection");
 		readConnection.close();
@@ -326,6 +326,7 @@ public abstract class LabJack {
 	 * 
 	 * @throws CloneNotSupportedException
 	 */
+	@Override
 	public Object clone() throws CloneNotSupportedException {
 		CloneNotSupportedException e = new CloneNotSupportedException();
 		logger.error("Clone is not supported\n" + e.getMessage(), e.getCause());

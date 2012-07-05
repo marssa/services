@@ -30,20 +30,19 @@ import org.marssa.footprint.datatypes.decimal.temperature.DegreesCelcius;
 import org.marssa.footprint.exceptions.OutOfRange;
 import org.marssa.footprint.interfaces.navigation.IDepthSensor;
 import org.marssa.footprint.logger.MMarker;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import ch.qos.logback.classic.Logger;
 
 /**
  * @author Warren Zahra
  * 
  */
 public class DepthSensor implements IDepthSensor, SentenceListener {
-	private static final Logger logger = (Logger) LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(DepthSensor.class.getName());
 
 	// TODO check if reader variable is really required
-	private SentenceReader reader;
+	private final SentenceReader reader;
 
 	Metres depthMeters = null;
 	DegreesCelcius temperatureDegrees = null;
@@ -59,12 +58,14 @@ public class DepthSensor implements IDepthSensor, SentenceListener {
 				sentenceIDs);
 	}
 
+	@Override
 	public ADistance getDepthMeters() throws OutOfRange {
 		logger.trace(MMarker.GETTER, "Returning Depth in metres {} .",
 				depthMeters);
 		return depthMeters;
 	}
 
+	@Override
 	public ATemperature getTemperatureDegrees() {
 		logger.trace(MMarker.GETTER,
 				"Returning Temperature in degreesCelsius {} .",
@@ -72,15 +73,19 @@ public class DepthSensor implements IDepthSensor, SentenceListener {
 		return temperatureDegrees;
 	}
 
+	@Override
 	public void readingPaused() {
 	}
 
+	@Override
 	public void readingStarted() {
 	}
 
+	@Override
 	public void readingStopped() {
 	}
 
+	@Override
 	public void sentenceRead(SentenceEvent event) {
 
 		String sid = event.getSentence().getSentenceId().toString();

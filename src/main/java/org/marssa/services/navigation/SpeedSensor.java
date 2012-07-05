@@ -34,92 +34,108 @@ import org.marssa.footprint.datatypes.decimal.temperature.DegreesCelcius;
 import org.marssa.footprint.exceptions.OutOfRange;
 import org.marssa.footprint.interfaces.navigation.ISpeedSensor;
 import org.marssa.footprint.logger.MMarker;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import ch.qos.logback.classic.Logger;
 
 /**
  * @author Warren Zahra
- *
+ * 
  */
 public class SpeedSensor implements ISpeedSensor, SentenceListener {
 
-	private static Logger SpeedSensor = (Logger) LoggerFactory.getLogger("SpeedSensor");
+	private static Logger SpeedSensor = LoggerFactory.getLogger("SpeedSensor");
 	SentenceReader reader;
 	Knots speedKnots = null;
 	Metres depthMeters = null;
 	DegreesDecimal degreesTrue = null;
 	DegreesDecimal degreesMagnetic = null;
 	DegreesCelcius temperatureDegrees = null;
-	
-	public SpeedSensor(SentenceReader reader){
+
+	public SpeedSensor(SentenceReader reader) {
 		this.reader = reader;
-        reader.addSentenceListener(this, "MTW");
-        reader.addSentenceListener(this, "VHW");
-        reader.addSentenceListener(this, SentenceId.DBT);
-        reader.addSentenceListener(this, SentenceId.DPT);
-        String[] sentenceIDs = {"MTW","VHW","DBT","DPT"};
-        SpeedSensor.info("A speed sensor with the following Sentence id is instantiated",sentenceIDs);
+		reader.addSentenceListener(this, "MTW");
+		reader.addSentenceListener(this, "VHW");
+		reader.addSentenceListener(this, SentenceId.DBT);
+		reader.addSentenceListener(this, SentenceId.DPT);
+		String[] sentenceIDs = { "MTW", "VHW", "DBT", "DPT" };
+		SpeedSensor
+				.info("A speed sensor with the following Sentence id is instantiated",
+						sentenceIDs);
 	}
-	
-	public ASpeed getSpeedKnots() throws OutOfRange{
-		SpeedSensor.trace(MMarker.GETTER,"Returning speed in knots {} .", speedKnots);
+
+	@Override
+	public ASpeed getSpeedKnots() throws OutOfRange {
+		SpeedSensor.trace(MMarker.GETTER, "Returning speed in knots {} .",
+				speedKnots);
 		return speedKnots;
 	}
-		
-	public DegreesDecimal getDegreesTrue() throws OutOfRange{
-		SpeedSensor.trace(MMarker.GETTER,"Returning Degrees in degreesTrue {} .", degreesTrue);
+
+	@Override
+	public DegreesDecimal getDegreesTrue() throws OutOfRange {
+		SpeedSensor.trace(MMarker.GETTER,
+				"Returning Degrees in degreesTrue {} .", degreesTrue);
 		return degreesTrue;
 	}
 
-	public DegreesDecimal getDegreesMagnetic() throws OutOfRange{
-		SpeedSensor.trace(MMarker.GETTER,"Returning Degrees in degreesMagnetic {} .", degreesMagnetic);
+	@Override
+	public DegreesDecimal getDegreesMagnetic() throws OutOfRange {
+		SpeedSensor.trace(MMarker.GETTER,
+				"Returning Degrees in degreesMagnetic {} .", degreesMagnetic);
 		return degreesMagnetic;
-	}	
-	
-	public ADistance getDepthMeters() throws OutOfRange{
-		SpeedSensor.trace(MMarker.GETTER,"Returning Depth in metres {} .", depthMeters);
+	}
+
+	public ADistance getDepthMeters() throws OutOfRange {
+		SpeedSensor.trace(MMarker.GETTER, "Returning Depth in metres {} .",
+				depthMeters);
 		return depthMeters;
-	}	
-	
-	public ATemperature getTemperature(){
-		SpeedSensor.trace(MMarker.GETTER,"Returning Temperature in degreesCelsius {} .", temperatureDegrees);
+	}
+
+	public ATemperature getTemperature() {
+		SpeedSensor.trace(MMarker.GETTER,
+				"Returning Temperature in degreesCelsius {} .",
+				temperatureDegrees);
 		return temperatureDegrees;
 	}
 
-	public void readingPaused() {}
-	
-	public void readingStarted() {}
-	
-	public void readingStopped() {}
-	
+	@Override
+	public void readingPaused() {
+	}
+
+	@Override
+	public void readingStarted() {
+	}
+
+	@Override
+	public void readingStopped() {
+	}
+
+	@Override
 	public void sentenceRead(SentenceEvent event) {
 		String sid = event.getSentence().getSentenceId().toString();
-		SpeedSensor.debug("Sentence received is of Id type",sid);
+		SpeedSensor.debug("Sentence received is of Id type", sid);
 		try {
-	        if (sid.equals("MTW")) {
-	        	MTWSentence mtw = (MTWSentence) event.getSentence();
-	        	temperatureDegrees = new DegreesCelcius(mtw.getTemperature());
-	        	
-	        } else if(sid.equals("DBT")) {
-	        	DBTSentence dbt = (DBTSentence) event.getSentence();
+			if (sid.equals("MTW")) {
+				MTWSentence mtw = (MTWSentence) event.getSentence();
+				temperatureDegrees = new DegreesCelcius(mtw.getTemperature());
+
+			} else if (sid.equals("DBT")) {
+				DBTSentence dbt = (DBTSentence) event.getSentence();
 				depthMeters = new Metres(dbt.getDepth());
-	        	
-	        } else if(sid.equals("DPT")) {
-	        	DPTSentence dpt = (DPTSentence) event.getSentence();
-	        	depthMeters = new Metres(dpt.getDepth());
-	        	
-	        }else if(sid.equals("VHW")) {
-	        	VHWSentence vhw = (VHWSentence) event.getSentence();
-	        	speedKnots = new Knots(vhw.getSpeedKnots());
-	        	degreesMagnetic = new DegreesDecimal(vhw.getMagneticHeading());
-	        	degreesTrue = new DegreesDecimal(vhw.getHeading());
-	      		}
+
+			} else if (sid.equals("DPT")) {
+				DPTSentence dpt = (DPTSentence) event.getSentence();
+				depthMeters = new Metres(dpt.getDepth());
+
+			} else if (sid.equals("VHW")) {
+				VHWSentence vhw = (VHWSentence) event.getSentence();
+				speedKnots = new Knots(vhw.getSpeedKnots());
+				degreesMagnetic = new DegreesDecimal(vhw.getMagneticHeading());
+				degreesTrue = new DegreesDecimal(vhw.getHeading());
 			}
-	        catch (OutOfRange e) {
-	        	SpeedSensor.debug("Value is out of range",new OutOfRange());
-	        	// TODO Auto-generated catch block
-	        	//e.printStackTrace();
+		} catch (OutOfRange e) {
+			SpeedSensor.debug("Value is out of range", new OutOfRange());
+			// TODO Auto-generated catch block
+			// e.printStackTrace();
 		}
 	}
 

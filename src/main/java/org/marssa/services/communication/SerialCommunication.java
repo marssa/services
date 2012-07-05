@@ -23,12 +23,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-
 import org.marssa.footprint.exceptions.ConfigurationError;
 import org.marssa.footprint.logger.MMarker;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import ch.qos.logback.classic.Logger;
 
 /**
  * @author Warren Zahra
@@ -38,7 +36,7 @@ public class SerialCommunication {
 	/**
 	 * 
 	 */
-	private static Logger logger = (Logger) LoggerFactory
+	private static Logger logger = LoggerFactory
 			.getLogger(SerialCommunication.class.getName());
 	InputStream in;
 	OutputStream out;

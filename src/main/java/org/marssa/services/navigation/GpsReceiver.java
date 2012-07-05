@@ -38,9 +38,9 @@ import org.marssa.footprint.exceptions.OutOfRange;
 import org.marssa.footprint.interfaces.navigation.IGpsReceiver;
 import org.marssa.footprint.logger.MMarker;
 import org.marssa.services.constants.ServicesConstants;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.qos.logback.classic.Logger;
 import de.taimos.gpsd4java.backend.GPSdEndpoint;
 import de.taimos.gpsd4java.backend.ResultParser;
 import de.taimos.gpsd4java.types.ParseException;
@@ -52,11 +52,11 @@ import de.taimos.gpsd4java.types.TPVObject;
  */
 public class GpsReceiver implements IGpsReceiver {
 
-	private static final Logger logger = (Logger) LoggerFactory
+	private static final Logger logger = LoggerFactory
 			.getLogger(GpsReceiver.class);
 	GPSdEndpoint ep;
-	private MString host;
-	private MInteger port;
+	private final MString host;
+	private final MInteger port;
 
 	public GpsReceiver(MString host, MInteger port) throws NoValue,
 			NoConnection {
@@ -91,6 +91,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * @see
 	 * mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getAzimuth()
 	 */
+	@Override
 	public DegreesInteger getAzimuth() {
 		// TODO Auto-generated method stub
 		return null;
@@ -101,6 +102,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * 
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getCOG()
 	 */
+	@Override
 	public DegreesDecimal getCOG() throws NoConnection, NoValue {
 		logger.trace(
 				"Getting COG from GPSReceiver with Host: {} and Port: {}.",
@@ -109,11 +111,10 @@ public class GpsReceiver implements IGpsReceiver {
 			try {
 				double cog = ep.poll().getFixes().get(0).getCourse();
 				logger.trace(MMarker.GETTER, "Returning COG {} .", cog);
-				if(Double.isNaN(cog)){
+				if (Double.isNaN(cog)) {
 					throw new NoValue();
-				}
-				else
-				return new DegreesDecimal(cog,new MathContext(5));
+				} else
+					return new DegreesDecimal(cog, new MathContext(5));
 			} catch (IOException e) {
 				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.intValue()) {
 					Object[] hoPo = { host, port, e.getMessage(), e.getCause() };
@@ -154,6 +155,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * @see
 	 * mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getCoordinate()
 	 */
+	@Override
 	public Coordinate getCoordinate() throws NoConnection, NoValue, OutOfRange {
 		logger.trace(
 				"Getting Coordinate from GPSReceiver with Host: {} and Port: {}.",
@@ -210,6 +212,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * 
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getDate()
 	 */
+	@Override
 	public MDate getDate() throws NoConnection, NoValue {
 		logger.trace(
 				"Getting Date from GPSReceiver with Host: {} and Port: {}.",
@@ -258,6 +261,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * @see
 	 * mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getElevation()
 	 */
+	@Override
 	public Metres getAltitude() throws NoConnection, NoValue, OutOfRange {
 		logger.trace(
 				"Getting Altitude from GPSReceiver with Host: {} and Port: {}.",
@@ -268,11 +272,10 @@ public class GpsReceiver implements IGpsReceiver {
 						.getAltitude(), new MathContext(5));
 				logger.trace(MMarker.GETTER, "Returning Elevation: {} .",
 						altitude);
-				if(Double.isNaN(altitude.doubleValue())){
+				if (Double.isNaN(altitude.doubleValue())) {
 					throw new NoValue();
-				}
-				else
-				return altitude;
+				} else
+					return altitude;
 			} catch (IOException e) {
 				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.intValue()) {
 					Object[] hoPo = { host, port };
@@ -309,6 +312,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * 
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getHDOP()
 	 */
+	@Override
 	public MDecimal getHDOP() {
 		// TODO Auto-generated method stub
 		return null;
@@ -321,6 +325,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getLocalZoneTime
 	 * ()
 	 */
+	@Override
 	public Hours getLocalZoneTime() {
 		// TODO Auto-generated method stub
 		return null;
@@ -331,6 +336,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * 
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getPDOP()
 	 */
+	@Override
 	public MDecimal getPDOP() {
 		// TODO Auto-generated method stub
 		return null;
@@ -342,6 +348,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * @see
 	 * mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getSatelliteID()
 	 */
+	@Override
 	public MInteger getSatelliteID() {
 		// TODO Auto-generated method stub
 		return null;
@@ -354,6 +361,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getSatelliteInView
 	 * ()
 	 */
+	@Override
 	public MInteger getSatelliteInView() {
 		// TODO Auto-generated method stub
 		return null;
@@ -366,6 +374,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getSatellitesInUse
 	 * ()
 	 */
+	@Override
 	public MInteger getSatellitesInUse() {
 		// TODO Auto-generated method stub
 		return null;
@@ -378,6 +387,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getSignalSrength
 	 * ()
 	 */
+	@Override
 	public MDecimal getSignalSrength() {
 		// TODO Auto-generated method stub
 		return null;
@@ -388,6 +398,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * 
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getSNR()
 	 */
+	@Override
 	public MDecimal getSNR() {
 		// TODO Auto-generated method stub
 		return null;
@@ -398,6 +409,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * 
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getSOG()
 	 */
+	@Override
 	public Knots getSOG() throws NoConnection, NoValue {
 		logger.info(
 				"Getting Speed Over Ground from a GPSReceiver with Host: {} and Port: {}.",
@@ -406,12 +418,11 @@ public class GpsReceiver implements IGpsReceiver {
 			try {
 				double speed = ep.poll().getFixes().get(0).getSpeed();
 				logger.trace(MMarker.GETTER, "Returning SOG: {} .", new Knots(
-						speed,new MathContext(5)));
-				if(Double.isNaN(speed)){
+						speed, new MathContext(5)));
+				if (Double.isNaN(speed)) {
 					throw new NoValue();
-				}
-				else
-				return new Knots(speed,new MathContext(6));
+				} else
+					return new Knots(speed, new MathContext(6));
 
 			} catch (IOException e) {
 				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.intValue()) {
@@ -452,6 +463,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * 
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getStatus()
 	 */
+	@Override
 	public MString getStatus() {
 		// TODO Auto-generated method stub
 		return null;
@@ -462,6 +474,7 @@ public class GpsReceiver implements IGpsReceiver {
 	 * 
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getTime()
 	 */
+	@Override
 	public Hours getTime() {
 		// TODO Auto-generated method stub
 		return null;
@@ -472,11 +485,13 @@ public class GpsReceiver implements IGpsReceiver {
 	 * 
 	 * @see mise.marssa.interfaces.navigation_equipment.IGpsReceiver#getVDOP()
 	 */
+	@Override
 	public MDecimal getVDOP() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	@Override
 	public MDecimal getEPT() throws NoConnection, NoValue, OutOfRange {
 		logger.info(
 				"Getting EPT from a GPSReceiver with Host: {} and Port: {}.",
@@ -487,13 +502,12 @@ public class GpsReceiver implements IGpsReceiver {
 				// http://www.devhardware.com/c/a/Mobile-Devices/TomTom-GO-920T-GPS-Review/2/
 				double EPT = ep.poll().getFixes().get(0).getCourse();
 				logger.trace(MMarker.GETTER, "Returning EPT: {} .", new Knots(
-						EPT,new MathContext(5)));
+						EPT, new MathContext(5)));
 				// System.out.println("This altitude is " + altitude);
-				if(Double.isNaN(EPT)){
+				if (Double.isNaN(EPT)) {
 					throw new NoValue();
-				}
-				else
-				return new Knots(EPT);
+				} else
+					return new Knots(EPT);
 
 			} catch (IOException e) {
 				if (i == ServicesConstants.GENERAL.RETRY_AMOUNT.intValue()) {

@@ -26,9 +26,8 @@ import org.marssa.footprint.datatypes.MString;
 import org.marssa.footprint.datatypes.integer.MInteger;
 import org.marssa.footprint.exceptions.NoConnection;
 import org.marssa.footprint.logger.MMarker;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import ch.qos.logback.classic.Logger;
 
 /**
  * @author Warren Zahra
@@ -36,8 +35,8 @@ import ch.qos.logback.classic.Logger;
  */
 public class LabJackU3 extends LabJack {
 
-	private static Logger logger = (Logger) LoggerFactory
-			.getLogger(LabJackU3.class.getName());
+	private static Logger logger = LoggerFactory.getLogger(LabJackU3.class
+			.getName());
 
 	static private LabJackConnections connectionPairs = new LabJackConnections();
 
@@ -277,14 +276,17 @@ public class LabJackU3 extends LabJack {
 		// static private Set<LabJackConnection> activeConnections;
 		static private ArrayList<LabJackConnection<LabJackU3>> activeConnections = new ArrayList<LabJack.LabJackConnection<LabJackU3>>();
 
+		@Override
 		public boolean hasNext() {
 			return activeConnections.iterator().hasNext();
 		}
 
+		@Override
 		public LabJackConnection<LabJackU3> next() {
 			return activeConnections.iterator().next();
 		}
 
+		@Override
 		public void remove() {
 			activeConnections.iterator().remove();
 		}

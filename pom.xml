@@ -77,26 +77,44 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.apache.felix</groupId>
-			<artifactId>org.osgi.core</artifactId>
-			<version>1.4.0</version>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>core</artifactId>
+			<version>4.3.0</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.6.4</version>
+			<scope>provided</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>de.taimos</groupId>
 			<artifactId>gpsd4java</artifactId>
 			<version>1.1.0</version>
 		</dependency>
+
 		<dependency>
 			<groupId>net.wimpi</groupId>
 			<artifactId>jamod</artifactId>
 			<version>1.2</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.marssa</groupId>
 			<artifactId>footprint</artifactId>
 			<version>${org.marssa.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>net.sf.marineapi</groupId>
 			<artifactId>marineapi</artifactId>
