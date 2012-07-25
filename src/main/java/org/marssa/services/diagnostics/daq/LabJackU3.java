@@ -65,7 +65,7 @@ public class LabJackU3 extends LabJack {
 		}
 	}
 
-	public enum TimerU3 implements ITimer {
+	public enum TimerU3 implements ILabJackTimer {
 		TIMER_0(0), // Documented in section 2.9.1.1
 		TIMER_1(1); // Documented in section 2.9.1.2
 		private TimerU3(int timers) {

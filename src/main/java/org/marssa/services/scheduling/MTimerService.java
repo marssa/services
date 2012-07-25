@@ -26,74 +26,60 @@ import java.util.Timer;
  * @author Warren Zahra
  * 
  */
-public class MTimer {
+public class MTimerService implements ITimerService {
 	private Timer marssaTimer;
-	private static MTimer mTimer;
-	private ArrayList<MTimerTask> timerTasklist = new ArrayList<MTimerTask>();;
+	private static MTimerService mTimer;
+	private MTimerTask task;
+	private final ArrayList<MTimerTask> timerTasklist = new ArrayList<MTimerTask>();;
 
-	private MTimer() {
+	private MTimerService() {
 		marssaTimer = new Timer();
 	}
 
-	public static MTimer getInstance() {
+	public static MTimerService getInstance() {
 		if (mTimer == null) {
-			mTimer = new MTimer();
+			mTimer = new MTimerService();
 		}
 		return mTimer;
 	}
 
-	public void addSchedule(MTimerTask task, Date time) {
-		if (marssaTimer == null)
-			marssaTimer = new Timer();
-
-		marssaTimer.schedule(task, time);
+	@Override
+	public void addSchedule(MTimerTask task, Date date) {
+		marssaTimer.schedule(task, date);
 		timerTasklist.add(task);
+
 	}
 
-	public void addSchedule(MTimerTask task, Date firstTime,
-			long period) {
-		if (marssaTimer == null)
-			marssaTimer = new Timer();
-		marssaTimer.schedule(task, firstTime, period);
+	@Override
+	public void addSchedule(MTimerTask task, Date date, long period) {
+		marssaTimer.schedule(task, date, period);
 		timerTasklist.add(task);
+
 	}
 
+	@Override
 	public void addSchedule(MTimerTask task, long delay) {
-		if (marssaTimer == null)
-			marssaTimer = new Timer();
 		marssaTimer.schedule(task, delay);
 		timerTasklist.add(task);
+
 	}
 
+	@Override
 	public void addSchedule(MTimerTask task, long delay, long period) {
-		if (marssaTimer == null)
-			marssaTimer = new Timer();
 		marssaTimer.schedule(task, delay, period);
 		timerTasklist.add(task);
+
 	}
 
-	public void addScheduleAtFixedRate(MTimerTask task,
-			Date firstTime, long period) {
-		if (marssaTimer == null)
-			marssaTimer = new Timer();
+	public void addScheduleAtFixedRate(MTimerTask task, Date firstTime,
+			long period) {
 		marssaTimer.scheduleAtFixedRate(task, firstTime, period);
 		timerTasklist.add(task);
 	}
 
-	public void addScheduleAtFixedRate(MTimerTask task, long delay,
-			long period) {
-		if (marssaTimer == null)
-			marssaTimer = new Timer();
+	public void addScheduleAtFixedRate(MTimerTask task, long delay, long period) {
 		marssaTimer.scheduleAtFixedRate(task, delay, period);
 		timerTasklist.add(task);
-	}
-
-	/**
-	 * Returns a copy of the timer task list
-	 * @return copy of timer task list
-	 */
-	public ArrayList<MTimerTask> list() {
-		return new ArrayList<MTimerTask>(timerTasklist);
 	}
 
 	public void cancel() {

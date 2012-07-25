@@ -17,6 +17,6 @@ package org.marssa.services.diagnostics.daq;
 
 import org.marssa.footprint.datatypes.integer.MInteger;
 
-public interface ITimer {
+public interface ILabJackTimer {
 	public MInteger getTimer();
 }

@@ -65,7 +65,7 @@ public class LabJackUE9 extends LabJack {
 		}
 	}
 
-	public enum TimerUE9 implements ITimer {
+	public enum TimerUE9 implements ILabJackTimer {
 		TIMER_0(0), TIMER_1(1), TIMER_2(2), TIMER_3(3), TIMER_4(4), TIMER_5(5);
 		private TimerUE9(int timers) {
 		}

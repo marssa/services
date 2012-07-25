@@ -136,7 +136,7 @@ public abstract class LabJack {
 	 * @see org.marssa.services.diagnostics.daq.LabJackUE9.TimersEnabledUE9
 	 */
 	public class Timer {
-		ITimer timerNumber;
+		ILabJackTimer timerNumber;
 		// Timer mode addresses
 		private final MInteger TIMER0_CONFIG_MODE_ADDR = new MInteger(7100);
 		private final MInteger TIMER1_CONFIG_MODE_ADDR = new MInteger(7102);
@@ -156,7 +156,7 @@ public abstract class LabJack {
 		private MInteger timerConfigModeAddress;
 		private MInteger timerValueAddress;
 
-		private Timer(ITimer timerNumber) {
+		private Timer(ILabJackTimer timerNumber) {
 			this.timerNumber = timerNumber;
 			// Constructor belongs to an enum class
 			// Hence the only possible values for the timerNumber are 0 and 1
@@ -370,7 +370,7 @@ public abstract class LabJack {
 	 * @see <a
 	 *      href="http://labjack.com/support/ue9/users-guide/2.10">http://labjack.com/support/ue9/users-guide/2.10</a>
 	 */
-	public void setTimerMode(ITimer timer, ITimerConfigMode timerConfigMode)
+	public void setTimerMode(ILabJackTimer timer, ITimerConfigMode timerConfigMode)
 			throws ConfigurationError, NoConnection {
 		logger.info(MMarker.SETTER, "Setting timerMode");
 		if ((timer.getTimer().intValue() + 1) > numTimers.getTimersEnabled()
@@ -427,7 +427,7 @@ public abstract class LabJack {
 	 * @throws OutOfRange
 	 * @see org.marssa.services.diagnostics.daq.LabJack.TimersEnabled
 	 */
-	public void setTimerValue(ITimer timer, MInteger timerValue)
+	public void setTimerValue(ILabJackTimer timer, MInteger timerValue)
 			throws NoConnection, OutOfRange, ConfigurationError {
 		logger.info(MMarker.SETTER, "Setting timerValue");
 		if ((timer.getTimer().intValue() + 1) > numTimers.getTimersEnabled()
