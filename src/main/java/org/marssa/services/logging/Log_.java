@@ -35,7 +35,7 @@ import org.marssa.footprint.datatypes.time.MTimeStamp;
  * @author Alan Grech
  */
 @MappedSuperclass
-abstract public class Log {
+abstract public class Log_ {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(generator = "increment")
